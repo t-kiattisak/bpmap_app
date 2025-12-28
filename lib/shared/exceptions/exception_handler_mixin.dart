@@ -28,16 +28,14 @@ mixin ExceptionHandlerMixin on NetworkService {
       String identifier = '';
       int statusCode = 0;
       log(e.runtimeType.toString());
-      switch (e.runtimeType) {
-        case SocketException:
-          e as SocketException;
+      switch (e) {
+        case SocketException _:
           message = 'Unable to connect to the server.';
           statusCode = 0;
           identifier = 'Socket Exception ${e.message}\n at  $endpoint';
           break;
 
-        case DioException:
-          e as DioException;
+        case DioException _:
           message = e.response?.data?['message'] ?? 'Internal Error occurred';
           statusCode = 1;
           identifier = 'DioException ${e.message} \nat  $endpoint';
