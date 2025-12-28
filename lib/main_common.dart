@@ -8,6 +8,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> mainCommon(Environment env) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final envFile = _getEnvFile(env);
   await dotenv.load(fileName: envFile);
 

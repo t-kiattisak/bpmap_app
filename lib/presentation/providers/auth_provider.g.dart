@@ -38,12 +38,12 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 );
 
 typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$loginControllerHash() => r'06faa27e8286bcee6b7f59e6c083732ed3c81d10';
+String _$loginControllerHash() => r'5f4556a715502d051d47efd46f5f7a0e53bd6e45';
 
 /// See also [LoginController].
 @ProviderFor(LoginController)
 final loginControllerProvider =
-    AutoDisposeAsyncNotifierProvider<LoginController, void>.internal(
+    AutoDisposeAsyncNotifierProvider<LoginController, AuthCredentials>.internal(
   LoginController.new,
   name: r'loginControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -53,6 +53,6 @@ final loginControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$LoginController = AutoDisposeAsyncNotifier<void>;
+typedef _$LoginController = AutoDisposeAsyncNotifier<AuthCredentials>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

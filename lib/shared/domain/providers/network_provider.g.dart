@@ -6,7 +6,7 @@ part of 'network_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'e4aabd48a6a7aacd5b8f3d41311a9fdb3dfa05d0';
+String _$dioHash() => r'6acec60b7c44971f85364894b2e821927a55a1df';
 
 /// See also [dio].
 @ProviderFor(dio)
@@ -20,6 +20,21 @@ final dioProvider = AutoDisposeProvider<Dio>.internal(
 );
 
 typedef DioRef = AutoDisposeProviderRef<Dio>;
+String _$authInterceptorHash() => r'dea7ddb5ed45b9b32f291cc43353852678a72ebf';
+
+/// See also [authInterceptor].
+@ProviderFor(authInterceptor)
+final authInterceptorProvider = AutoDisposeProvider<AuthInterceptor>.internal(
+  authInterceptor,
+  name: r'authInterceptorProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authInterceptorHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AuthInterceptorRef = AutoDisposeProviderRef<AuthInterceptor>;
 String _$networkHash() => r'62223b8b4c8268682172010582447f00261d97aa';
 
 /// See also [network].

@@ -4,6 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../constants/app_constants.dart';
 import '../../data/remote/dio_network_service.dart';
 import '../../data/remote/network_service.dart';
+import '../../data/remote/interceptors/auth_interceptor.dart';
+import 'storage_provider.dart';
 
 part 'network_provider.g.dart';
 
@@ -23,11 +25,18 @@ Dio dio(DioRef ref) {
     ),
   );
 
-  dio.interceptors.add(
+  dio.interceptors.addAll([
+    ref.watch(authInterceptorProvider),
     LogInterceptor(request: true, requestBody: true, responseBody: true),
-  );
+  ]);
 
   return dio;
+}
+
+@riverpod
+AuthInterceptor authInterceptor(AuthInterceptorRef ref) {
+  final storage = ref.watch(secureStorageProvider);
+  return AuthInterceptor(storage);
 }
 
 @riverpod
