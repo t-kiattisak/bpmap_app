@@ -9,13 +9,13 @@ import 'package:bpmap_app/domain/entities/auth_credentials.dart';
 part 'auth_provider.g.dart';
 
 @riverpod
-AuthRemoteDataSource authRemoteDataSource(AuthRemoteDataSourceRef ref) {
+AuthRemoteDataSource authRemoteDataSource(Ref ref) {
   final networkService = ref.watch(networkProvider);
   return AuthRemoteDataSourceImpl(networkService);
 }
 
 @riverpod
-AuthRepository authRepository(AuthRepositoryRef ref) {
+AuthRepository authRepository(Ref ref) {
   final remoteDataSource = ref.watch(authRemoteDataSourceProvider);
   return AuthRepositoryImpl(remoteDataSource);
 }

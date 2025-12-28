@@ -10,7 +10,7 @@ import 'storage_provider.dart';
 part 'network_provider.g.dart';
 
 @riverpod
-Dio dio(DioRef ref) {
+Dio dio(Ref ref) {
   final config = ref.watch(appConfigProvider);
   final dio = Dio(
     BaseOptions(
@@ -34,13 +34,13 @@ Dio dio(DioRef ref) {
 }
 
 @riverpod
-AuthInterceptor authInterceptor(AuthInterceptorRef ref) {
+AuthInterceptor authInterceptor(Ref ref) {
   final storage = ref.watch(storageServiceProvider);
   return AuthInterceptor(storage);
 }
 
 @riverpod
-NetworkService network(NetworkRef ref) {
+NetworkService network(Ref ref) {
   final dio = ref.watch(dioProvider);
   return DioNetworkService(dio);
 }

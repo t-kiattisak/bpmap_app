@@ -7,11 +7,8 @@ import 'package:go_router/go_router.dart';
 part 'router.g.dart';
 
 @TypedGoRoute<SplashRoute>(path: '/splash')
-class SplashRoute extends GoRouteData {
+class SplashRoute extends GoRouteData with $SplashRoute {
   const SplashRoute();
-
-  @override
-  String get location => $SplashRouteExtension(this).location;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -20,11 +17,8 @@ class SplashRoute extends GoRouteData {
 }
 
 @TypedGoRoute<LoginRoute>(path: '/login')
-class LoginRoute extends GoRouteData {
+class LoginRoute extends GoRouteData with $LoginRoute {
   const LoginRoute();
-
-  @override
-  String get location => $LoginRouteExtension(this).location;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -33,11 +27,8 @@ class LoginRoute extends GoRouteData {
 }
 
 @TypedGoRoute<HomeRoute>(path: '/')
-class HomeRoute extends GoRouteData {
+class HomeRoute extends GoRouteData with $HomeRoute {
   const HomeRoute();
-
-  @override
-  String get location => $HomeRouteExtension(this).location;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {

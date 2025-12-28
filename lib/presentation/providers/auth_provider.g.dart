@@ -6,53 +6,139 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRemoteDataSourceHash() =>
-    r'd8e8885ea2a597d6c03cc523ceeaddee4a099998';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [authRemoteDataSource].
 @ProviderFor(authRemoteDataSource)
-final authRemoteDataSourceProvider =
-    AutoDisposeProvider<AuthRemoteDataSource>.internal(
-  authRemoteDataSource,
-  name: r'authRemoteDataSourceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$authRemoteDataSourceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const authRemoteDataSourceProvider = AuthRemoteDataSourceProvider._();
 
-typedef AuthRemoteDataSourceRef = AutoDisposeProviderRef<AuthRemoteDataSource>;
-String _$authRepositoryHash() => r'47e7f13a70a820843ed4242556697cb91432c454';
+final class AuthRemoteDataSourceProvider
+    extends
+        $FunctionalProvider<
+          AuthRemoteDataSource,
+          AuthRemoteDataSource,
+          AuthRemoteDataSource
+        >
+    with $Provider<AuthRemoteDataSource> {
+  const AuthRemoteDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authRemoteDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// See also [authRepository].
+  @override
+  String debugGetCreateSourceHash() => _$authRemoteDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AuthRemoteDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  AuthRemoteDataSource create(Ref ref) {
+    return authRemoteDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AuthRemoteDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AuthRemoteDataSource>(value),
+    );
+  }
+}
+
+String _$authRemoteDataSourceHash() =>
+    r'b26434d2f8d1a7ec9680cb7c6cf6c64f47e98a7d';
+
 @ProviderFor(authRepository)
-final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
-  authRepository,
-  name: r'authRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$authRepositoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const authRepositoryProvider = AuthRepositoryProvider._();
 
-typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
+final class AuthRepositoryProvider
+    extends $FunctionalProvider<AuthRepository, AuthRepository, AuthRepository>
+    with $Provider<AuthRepository> {
+  const AuthRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<AuthRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AuthRepository create(Ref ref) {
+    return authRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AuthRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AuthRepository>(value),
+    );
+  }
+}
+
+String _$authRepositoryHash() => r'43e05b07a705006cf920b080f78421ecc8bab1d9';
+
+@ProviderFor(LoginController)
+const loginControllerProvider = LoginControllerProvider._();
+
+final class LoginControllerProvider
+    extends $AsyncNotifierProvider<LoginController, AuthCredentials> {
+  const LoginControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'loginControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$loginControllerHash();
+
+  @$internal
+  @override
+  LoginController create() => LoginController();
+}
+
 String _$loginControllerHash() => r'0dd905f8fbbf78bdf08b4b8201d0145297f78b36';
 
-/// See also [LoginController].
-@ProviderFor(LoginController)
-final loginControllerProvider =
-    AutoDisposeAsyncNotifierProvider<LoginController, AuthCredentials>.internal(
-  LoginController.new,
-  name: r'loginControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$loginControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LoginController = AutoDisposeAsyncNotifier<AuthCredentials>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+abstract class _$LoginController extends $AsyncNotifier<AuthCredentials> {
+  FutureOr<AuthCredentials> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<AuthCredentials>, AuthCredentials>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<AuthCredentials>, AuthCredentials>,
+              AsyncValue<AuthCredentials>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

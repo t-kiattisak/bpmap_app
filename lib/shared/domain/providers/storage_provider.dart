@@ -6,12 +6,12 @@ import '../../data/local/storage_service.dart';
 part 'storage_provider.g.dart';
 
 @riverpod
-FlutterSecureStorage secureStorage(SecureStorageRef ref) {
+FlutterSecureStorage secureStorage(Ref ref) {
   return const FlutterSecureStorage();
 }
 
 @riverpod
-StorageService storageService(StorageServiceRef ref) {
+StorageService storageService(Ref ref) {
   final storage = ref.watch(secureStorageProvider);
   return StorageService(storage);
 }
