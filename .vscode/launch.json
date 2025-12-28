@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "bpmap (Dev)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_dev.dart",
+      "args": ["--flavor", "dev"]
+    },
+    {
+      "name": "bpmap (Staging)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_stg.dart",
+      "args": ["--flavor", "stg"]
+    },
+    {
+      "name": "bpmap (Prod)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_prod.dart",
+      "args": ["--flavor", "prod"]
+    }
+  ]
+}
