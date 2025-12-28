@@ -3,6 +3,8 @@ import 'package:bpmap_app/presentation/router/router_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:bpmap_app/shared/theme/app_theme.dart';
+
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
@@ -13,10 +15,7 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: config.appName,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
       routerConfig: router,
     );
   }
