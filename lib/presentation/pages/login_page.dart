@@ -53,7 +53,10 @@ class LoginPage extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('เข้าสู่ระบบ', style: textTheme.headlineMedium),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 32.0),
+                child: Text('เข้าสู่ระบบ', style: textTheme.headlineMedium),
+              ),
               const SizedBox(height: 32),
               Row(
                 children: [
