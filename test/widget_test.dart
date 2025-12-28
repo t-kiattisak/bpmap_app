@@ -5,22 +5,29 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:bpmap_app/shared/domain/providers/app_config_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:bpmap_app/main.dart';
-import 'package:bpmap_app/app_config.dart';
+import 'package:bpmap_app/shared/domain/models/app_config.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
-      MyApp(
-        config: AppConfig(
-          environment: Environment.dev,
-          appName: 'Test App',
-          apiBaseUrl: 'https://test.com',
-        ),
+      ProviderScope(
+        overrides: [
+          appConfigProvider.overrideWithValue(
+            AppConfig(
+              environment: Environment.dev,
+              appName: 'Test App',
+              apiBaseUrl: 'https://test.com',
+            ),
+          ),
+        ],
+        child: const MyApp(),
       ),
     );
 

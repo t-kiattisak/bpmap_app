@@ -1,12 +1,25 @@
-import 'app_config.dart';
+import 'package:bpmap_app/shared/domain/providers/app_config_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'shared/domain/models/app_config.dart';
 import 'main.dart';
+import 'shared/constants/app_constants.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env.stg");
+
   var configuredApp = AppConfig(
     environment: Environment.stg,
-    appName: "BP Map (Staging)",
-    apiBaseUrl: "https://stg-api.bpmap.com",
+    appName: dotenv.env[AppConstants.appNameKey] ?? "BP Map (Staging)",
+    apiBaseUrl:
+        dotenv.env[AppConstants.baseUrlKey] ?? "https://stg-api.bpmap.com",
   );
 
-  runMapApp(configuredApp);
+  runApp(
+    ProviderScope(
+      overrides: [appConfigProvider.overrideWithValue(configuredApp)],
+      child: const MyApp(),
+    ),
+  );
 }
