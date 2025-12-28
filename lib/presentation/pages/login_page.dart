@@ -53,7 +53,10 @@ class LoginPage extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('เข้าสู่ระบบ', style: textTheme.headlineMedium),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 32.0),
+                child: Text('เข้าสู่ระบบ', style: textTheme.headlineMedium),
+              ),
               const SizedBox(height: 32),
               Row(
                 children: [
@@ -90,10 +93,10 @@ class LoginPage extends HookConsumerWidget {
                   children: [
                     AppTextField(
                       controller: emailController,
-                      label: 'Email*',
+                      label: 'อีเมล*',
                       keyboardType: TextInputType.emailAddress,
                       enabled: !isLoading,
-                      hintText: 'ex. joe.doe@gmail.com',
+                      hintText: 'xxxx@xxx.com',
                       suffixIcon: const Icon(
                         Icons.check_circle_outline,
                         size: 20,
@@ -108,7 +111,7 @@ class LoginPage extends HookConsumerWidget {
                     const SizedBox(height: 24),
                     PasswordTextField(
                       controller: passwordController,
-                      label: 'Password *',
+                      label: 'รหัสผ่าน *',
                       enabled: !isLoading,
                     ),
 

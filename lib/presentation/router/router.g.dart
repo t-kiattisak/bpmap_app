@@ -6,74 +6,73 @@ part of 'router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [
-      $splashRoute,
-      $loginRoute,
-      $homeRoute,
-    ];
+List<RouteBase> get $appRoutes => [$splashRoute, $loginRoute, $homeRoute];
 
-RouteBase get $splashRoute => GoRouteData.$route(
-      path: '/splash',
-      factory: $SplashRouteExtension._fromState,
-    );
+RouteBase get $splashRoute =>
+    GoRouteData.$route(path: '/splash', factory: $SplashRoute._fromState);
 
-extension $SplashRouteExtension on SplashRoute {
+mixin $SplashRoute on GoRouteData {
   static SplashRoute _fromState(GoRouterState state) => const SplashRoute();
 
-  String get location => GoRouteData.$location(
-        '/splash',
-      );
+  @override
+  String get location => GoRouteData.$location('/splash');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $loginRoute => GoRouteData.$route(
-      path: '/login',
-      factory: $LoginRouteExtension._fromState,
-    );
+RouteBase get $loginRoute =>
+    GoRouteData.$route(path: '/login', factory: $LoginRoute._fromState);
 
-extension $LoginRouteExtension on LoginRoute {
+mixin $LoginRoute on GoRouteData {
   static LoginRoute _fromState(GoRouterState state) => const LoginRoute();
 
-  String get location => GoRouteData.$location(
-        '/login',
-      );
+  @override
+  String get location => GoRouteData.$location('/login');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $homeRoute => GoRouteData.$route(
-      path: '/',
-      factory: $HomeRouteExtension._fromState,
-    );
+RouteBase get $homeRoute =>
+    GoRouteData.$route(path: '/', factory: $HomeRoute._fromState);
 
-extension $HomeRouteExtension on HomeRoute {
+mixin $HomeRoute on GoRouteData {
   static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
 
-  String get location => GoRouteData.$location(
-        '/',
-      );
+  @override
+  String get location => GoRouteData.$location('/');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }

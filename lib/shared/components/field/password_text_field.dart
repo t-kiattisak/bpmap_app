@@ -23,7 +23,7 @@ class PasswordTextField extends HookWidget {
       obscureText: !isPasswordVisible.value,
       enabled: enabled,
       decoration: InputDecoration(
-        hintText: label ?? 'Password',
+        hintText: label ?? 'รหัสผ่าน',
         suffixIcon: IconButton(
           icon: Icon(
             isPasswordVisible.value ? Icons.visibility : Icons.visibility_off,

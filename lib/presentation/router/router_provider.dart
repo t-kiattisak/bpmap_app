@@ -10,10 +10,7 @@ part 'router_provider.g.dart';
 final _routerKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
 
 @riverpod
-GoRouter router(RouterRef ref) {
-  // Use GlobalKey<NavigatorState> if you need to access NavigatorState without context
-  // final rootNavigatorKey = GlobalKey<NavigatorState>();
-
+GoRouter router(Ref ref) {
   final auth = ValueNotifier<AsyncValue<AuthCredentials>>(
     const AsyncLoading<AuthCredentials>(),
   );
@@ -55,7 +52,6 @@ GoRouter router(RouterRef ref) {
             return null;
           }
       }
-      return null;
     },
   );
   ref.onDispose(router.dispose);

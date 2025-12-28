@@ -4,7 +4,7 @@ part 'auth_credentials.freezed.dart';
 part 'auth_credentials.g.dart';
 
 @freezed
-class AuthCredentials with _$AuthCredentials {
+abstract class AuthCredentials with _$AuthCredentials {
   const AuthCredentials._();
 
   const factory AuthCredentials({

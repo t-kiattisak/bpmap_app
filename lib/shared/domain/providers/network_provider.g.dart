@@ -6,48 +6,128 @@ part of 'network_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'6acec60b7c44971f85364894b2e821927a55a1df';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [dio].
 @ProviderFor(dio)
-final dioProvider = AutoDisposeProvider<Dio>.internal(
-  dio,
-  name: r'dioProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$dioHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const dioProvider = DioProvider._();
 
-typedef DioRef = AutoDisposeProviderRef<Dio>;
-String _$authInterceptorHash() => r'6a7bfecef29976fc8f6a9e74800da28f50bdb938';
+final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
+    with $Provider<Dio> {
+  const DioProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dioProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// See also [authInterceptor].
+  @override
+  String debugGetCreateSourceHash() => _$dioHash();
+
+  @$internal
+  @override
+  $ProviderElement<Dio> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Dio create(Ref ref) {
+    return dio(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Dio value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Dio>(value),
+    );
+  }
+}
+
+String _$dioHash() => r'140210985f27522edd98434dbbb11883701cd66a';
+
 @ProviderFor(authInterceptor)
-final authInterceptorProvider = AutoDisposeProvider<AuthInterceptor>.internal(
-  authInterceptor,
-  name: r'authInterceptorProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$authInterceptorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const authInterceptorProvider = AuthInterceptorProvider._();
 
-typedef AuthInterceptorRef = AutoDisposeProviderRef<AuthInterceptor>;
-String _$networkHash() => r'62223b8b4c8268682172010582447f00261d97aa';
+final class AuthInterceptorProvider
+    extends
+        $FunctionalProvider<AuthInterceptor, AuthInterceptor, AuthInterceptor>
+    with $Provider<AuthInterceptor> {
+  const AuthInterceptorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authInterceptorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// See also [network].
+  @override
+  String debugGetCreateSourceHash() => _$authInterceptorHash();
+
+  @$internal
+  @override
+  $ProviderElement<AuthInterceptor> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AuthInterceptor create(Ref ref) {
+    return authInterceptor(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AuthInterceptor value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AuthInterceptor>(value),
+    );
+  }
+}
+
+String _$authInterceptorHash() => r'b736aa9ccc14742627aabe6693cc0dc5771f9e4d';
+
 @ProviderFor(network)
-final networkProvider = AutoDisposeProvider<NetworkService>.internal(
-  network,
-  name: r'networkProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$networkHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const networkProvider = NetworkProvider._();
 
-typedef NetworkRef = AutoDisposeProviderRef<NetworkService>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+final class NetworkProvider
+    extends $FunctionalProvider<NetworkService, NetworkService, NetworkService>
+    with $Provider<NetworkService> {
+  const NetworkProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'networkProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$networkHash();
+
+  @$internal
+  @override
+  $ProviderElement<NetworkService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  NetworkService create(Ref ref) {
+    return network(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(NetworkService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<NetworkService>(value),
+    );
+  }
+}
+
+String _$networkHash() => r'4aee4c9db5d9debf4dee50efd2fc610389160a6a';
