@@ -41,7 +41,10 @@ GoRouter router(RouterRef ref) {
         case AsyncError():
           return const LoginRoute().location;
         case AsyncLoading():
-          return const SplashRoute().location;
+          {
+            if (isLoggingIn) return null;
+            return const SplashRoute().location;
+          }
         case AsyncData(:final value):
           {
             if (value.isLogin) {

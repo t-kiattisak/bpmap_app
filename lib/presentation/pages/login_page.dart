@@ -1,91 +1,126 @@
+import 'package:bpmap_app/presentation/providers/auth_provider.dart';
+import 'package:bpmap_app/shared/components/button/action_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class LoginPage extends StatefulWidget {
+import 'package:bpmap_app/shared/components/field/app_text_field.dart';
+import 'package:bpmap_app/shared/components/field/password_text_field.dart';
+
+class LoginPage extends HookConsumerWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final formKey = useMemoized(() => GlobalKey<FormState>());
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
 
-class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+    ref.listen(loginControllerProvider, (previous, next) {
+      if (next is AsyncError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error.toString()),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+    final loginState = ref.watch(loginControllerProvider);
+    final isLoading = loginState is AsyncLoading;
 
-  void _handleLogin() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Implement login logic
-      final email = _emailController.text;
-      final password = _passwordController.text;
-      debugPrint('Login attempt with: $email');
+    Future<void> handleLogin() async {
+      await Future.delayed(const Duration(minutes: 1));
+      if (formKey.currentState!.validate()) {
+        await ref
+            .read(loginControllerProvider.notifier)
+            .login(
+              username: emailController.text,
+              password: passwordController.text,
+            );
+      }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Center(
+      body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.email),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('เข้าสู่ระบบ', style: textTheme.headlineMedium),
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.error,
+                      ),
+                      onPressed: () {},
+                      icon: const FaIcon(FontAwesomeIcons.google, size: 20),
+                      label: const Text('With Google'),
+                    ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                      ),
+                      onPressed: () {},
+                      icon: const FaIcon(FontAwesomeIcons.line, size: 20),
+                      label: const Text('With Line'),
+                    ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
+                ],
+              ),
+              const SizedBox(height: 32),
+
+              // Form
+              Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AppTextField(
+                      controller: emailController,
+                      label: 'Email*',
+                      keyboardType: TextInputType.emailAddress,
+                      enabled: !isLoading,
+                      hintText: 'ex. joe.doe@gmail.com',
+                      suffixIcon: const Icon(
+                        Icons.check_circle_outline,
+                        size: 20,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'กรุณากรอกอีเมล';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    PasswordTextField(
+                      controller: passwordController,
+                      label: 'Password *',
+                      enabled: !isLoading,
+                    ),
+
+                    const SizedBox(height: 60),
+                    ActionButton(
+                      onPressed: handleLogin,
+                      label: const Text('Log In'),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text('Login'),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Don\'t have an account? Register'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
