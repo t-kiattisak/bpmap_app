@@ -38,7 +38,7 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 );
 
 typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$loginControllerHash() => r'5f4556a715502d051d47efd46f5f7a0e53bd6e45';
+String _$loginControllerHash() => r'0dd905f8fbbf78bdf08b4b8201d0145297f78b36';
 
 /// See also [LoginController].
 @ProviderFor(LoginController)

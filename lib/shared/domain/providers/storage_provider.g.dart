@@ -22,5 +22,20 @@ final secureStorageProvider =
 );
 
 typedef SecureStorageRef = AutoDisposeProviderRef<FlutterSecureStorage>;
+String _$storageServiceHash() => r'059ee2fd8a1676ca3667b7e67e5f4d6b7a5255c7';
+
+/// See also [storageService].
+@ProviderFor(storageService)
+final storageServiceProvider = AutoDisposeProvider<StorageService>.internal(
+  storageService,
+  name: r'storageServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$storageServiceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef StorageServiceRef = AutoDisposeProviderRef<StorageService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

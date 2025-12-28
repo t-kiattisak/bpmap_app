@@ -24,9 +24,9 @@ AuthRepository authRepository(AuthRepositoryRef ref) {
 class LoginController extends _$LoginController {
   @override
   FutureOr<AuthCredentials> build() async {
-    final storage = ref.read(secureStorageProvider);
-    final accessToken = await storage.read(key: 'access_token');
-    final refreshToken = await storage.read(key: 'refresh_token');
+    final storage = ref.read(storageServiceProvider);
+    final accessToken = await storage.getAccessToken();
+    final refreshToken = await storage.getRefreshToken();
 
     if (accessToken != null && accessToken.isNotEmpty) {
       final repository = ref.read(authRepositoryProvider);
@@ -34,7 +34,7 @@ class LoginController extends _$LoginController {
 
       return result.fold(
         (error) async {
-          await storage.deleteAll();
+          await storage.clearAll();
           return AuthCredentials(accessToken: '', refreshToken: '');
         },
         (user) {
@@ -54,7 +54,7 @@ class LoginController extends _$LoginController {
   }) async {
     state = const AsyncLoading();
     final repository = ref.read(authRepositoryProvider);
-    final storage = ref.read(secureStorageProvider);
+    final storage = ref.read(storageServiceProvider);
 
     final result = await repository.login(
       username: username,
@@ -64,14 +64,8 @@ class LoginController extends _$LoginController {
     state = await result.fold(
       (error) => AsyncError(error, StackTrace.current),
       (credentials) async {
-        await storage.write(
-          key: 'access_token',
-          value: credentials.accessToken,
-        );
-        await storage.write(
-          key: 'refresh_token',
-          value: credentials.refreshToken,
-        );
+        await storage.setAccessToken(credentials.accessToken);
+        await storage.setRefreshToken(credentials.refreshToken);
 
         return AsyncData(credentials);
       },
@@ -79,8 +73,8 @@ class LoginController extends _$LoginController {
   }
 
   Future<void> logout() async {
-    final storage = ref.read(secureStorageProvider);
-    await storage.deleteAll();
+    final storage = ref.read(storageServiceProvider);
+    await storage.clearAll();
     state = const AsyncData(AuthCredentials(accessToken: '', refreshToken: ''));
   }
 }

@@ -20,7 +20,7 @@ final dioProvider = AutoDisposeProvider<Dio>.internal(
 );
 
 typedef DioRef = AutoDisposeProviderRef<Dio>;
-String _$authInterceptorHash() => r'dea7ddb5ed45b9b32f291cc43353852678a72ebf';
+String _$authInterceptorHash() => r'6a7bfecef29976fc8f6a9e74800da28f50bdb938';
 
 /// See also [authInterceptor].
 @ProviderFor(authInterceptor)

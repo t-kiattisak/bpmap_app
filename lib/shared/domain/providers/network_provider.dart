@@ -35,7 +35,7 @@ Dio dio(DioRef ref) {
 
 @riverpod
 AuthInterceptor authInterceptor(AuthInterceptorRef ref) {
-  final storage = ref.watch(secureStorageProvider);
+  final storage = ref.watch(storageServiceProvider);
   return AuthInterceptor(storage);
 }
 
