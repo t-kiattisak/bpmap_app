@@ -32,9 +32,6 @@ class LoginController extends _$LoginController {
     final accessToken = await storage.getAccessToken();
     final refreshToken = await storage.getRefreshToken();
 
-    log('accessToken :: $accessToken');
-    log('refreshToken :: $refreshToken');
-
     if (accessToken != null && accessToken.isNotEmpty) {
       final repository = ref.read(authRepositoryProvider);
       final result = await repository.getMe();

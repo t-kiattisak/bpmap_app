@@ -62,6 +62,9 @@ class ActionButton extends HookWidget {
                 ),
               ),
               const SizedBox(width: 8),
+            ] else ...[
+              if (icon != null) icon!,
+              const SizedBox(width: 8),
             ],
             label,
           ],
