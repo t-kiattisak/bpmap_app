@@ -1,6 +1,8 @@
 import 'package:bpmap_app/shared/data/remote/network_service.dart';
 import 'package:bpmap_app/shared/domain/models/either.dart';
 import 'package:bpmap_app/shared/exceptions/http_exception.dart';
+import 'package:bpmap_app/shared/domain/models/response.dart';
+import 'package:bpmap_app/data/models/auth_response_model.dart';
 
 import 'package:bpmap_app/domain/entities/auth_credentials.dart';
 import 'package:bpmap_app/data/models/user_model.dart';
@@ -12,6 +14,10 @@ abstract class AuthRemoteDataSource {
   });
 
   Future<Either<AppException, UserModel>> getMe();
+
+  Future<Either<AppException, AuthCredentials>> googleLogin({
+    required String idToken,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -25,17 +31,55 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String password,
   }) async {
     final response = await _networkService.post(
-      '/auth/login',
+      '/api/auth/login',
       data: {'username': username, 'password': password},
+    );
+
+    return _handleAuthResponse(response, 'AuthRemoteDataSourceImpl.login');
+  }
+
+  @override
+  Future<Either<AppException, AuthCredentials>> googleLogin({
+    required String idToken,
+  }) async {
+    final response = await _networkService.post(
+      '/api/auth/login',
+      data: {'provider': 'google', 'access_token': idToken},
     );
 
     return response.fold((exception) => Left(exception), (response) {
       try {
+        final resData = response.data;
+        final authResponse = AuthResponseModel.fromJson(resData);
+        final credentials = AuthCredentials(
+          accessToken: authResponse.data.accessToken,
+          refreshToken: authResponse.data.accessToken,
+        );
+        return Right(credentials);
+      } catch (e) {
+        return Left(
+          AppException(
+            message: 'Failed to parse response',
+            statusCode: 0,
+            identifier: 'AuthRemoteDataSourceImpl.googleLogin',
+          ),
+        );
+      }
+    });
+  }
+
+  Either<AppException, AuthCredentials> _handleAuthResponse(
+    Either<AppException, Response> response,
+    String identifier,
+  ) {
+    return response.fold((exception) => Left(exception), (response) {
+      try {
         final data = response.data;
         if (data is Map<String, dynamic>) {
+          final authResponse = AuthResponseModel.fromJson(data);
           final credentials = AuthCredentials(
-            accessToken: data['accessToken'] ?? data['access_token'] ?? '',
-            refreshToken: data['refreshToken'] ?? data['refresh_token'] ?? '',
+            accessToken: authResponse.data.accessToken,
+            refreshToken: 'refresh_token',
           );
           return Right(credentials);
         }
@@ -43,15 +87,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           AppException(
             message: 'Invalid response format',
             statusCode: 0,
-            identifier: 'AuthRemoteDataSourceImpl.login',
+            identifier: identifier,
           ),
         );
       } catch (e) {
         return Left(
           AppException(
-            message: 'Failed to parse response',
+            message: 'Failed to parse response: $e',
             statusCode: 0,
-            identifier: 'AuthRemoteDataSourceImpl.login',
+            identifier: identifier,
           ),
         );
       }
@@ -60,7 +104,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<Either<AppException, UserModel>> getMe() async {
-    final response = await _networkService.get('/auth/me');
+    final response = await _networkService.get('/api/users/me');
 
     return response.fold((exception) => Left(exception), (response) {
       try {

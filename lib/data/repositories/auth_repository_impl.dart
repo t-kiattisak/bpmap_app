@@ -30,4 +30,12 @@ class AuthRepositoryImpl implements AuthRepository {
     final result = await _remoteDataSource.getMe();
     return result.fold((exception) => Left(exception), (user) => Right(user));
   }
+
+  @override
+  Future<Either<AppException, AuthCredentials>> googleLogin({
+    required String idToken,
+  }) async {
+    final result = await _remoteDataSource.googleLogin(idToken: idToken);
+    return result;
+  }
 }

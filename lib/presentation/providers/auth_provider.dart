@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:bpmap_app/shared/domain/providers/app_config_provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:bpmap_app/data/datasources/auth_remote_datasource.dart';
 import 'package:bpmap_app/data/repositories/auth_repository_impl.dart';
@@ -28,13 +32,19 @@ class LoginController extends _$LoginController {
     final accessToken = await storage.getAccessToken();
     final refreshToken = await storage.getRefreshToken();
 
+    log('accessToken :: $accessToken');
+    log('refreshToken :: $refreshToken');
+
     if (accessToken != null && accessToken.isNotEmpty) {
       final repository = ref.read(authRepositoryProvider);
       final result = await repository.getMe();
 
       return result.fold(
         (error) async {
-          await storage.clearAll();
+          log('Auto-login failed: $error');
+          if (error.statusCode == 401) {
+            await storage.clearAll();
+          }
           return AuthCredentials(accessToken: '', refreshToken: '');
         },
         (user) {
@@ -76,5 +86,50 @@ class LoginController extends _$LoginController {
     final storage = ref.read(storageServiceProvider);
     await storage.clearAll();
     state = const AsyncData(AuthCredentials(accessToken: '', refreshToken: ''));
+  }
+
+  Future<void> googleLogin() async {
+    state = const AsyncLoading();
+    try {
+      await GoogleSignIn.instance.initialize(
+        serverClientId: ref.read(appConfigProvider).googleServerClientId,
+      );
+      final GoogleSignIn signIn = GoogleSignIn.instance;
+      final GoogleSignInAccount? googleUser = await signIn.authenticate();
+      if (googleUser == null) {
+        state = AsyncError(
+          Exception('Google Sign-In failed: No User'),
+          StackTrace.current,
+        );
+        return;
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        state = AsyncError(
+          Exception('Google Sign-In failed: No ID Token'),
+          StackTrace.current,
+        );
+        return;
+      }
+
+      final repository = ref.read(authRepositoryProvider);
+      final storage = ref.read(storageServiceProvider);
+
+      final result = await repository.googleLogin(idToken: idToken);
+      state = await result.fold(
+        (error) => AsyncError(error, StackTrace.current),
+        (credentials) async {
+          await storage.setAccessToken(credentials.accessToken);
+          await storage.setRefreshToken(credentials.refreshToken);
+
+          return AsyncData(credentials);
+        },
+      );
+    } catch (e, stack) {
+      state = AsyncError(e, stack);
+    }
   }
 }

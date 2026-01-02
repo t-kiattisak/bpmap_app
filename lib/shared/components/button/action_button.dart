@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bpmap_app/shared/hooks/use_side_effect.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,7 @@ class ActionButton extends HookWidget {
         await future;
       } catch (exception) {
         if (!context.mounted) return;
+        log(exception.toString());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Something went wrong $exception')),
         );

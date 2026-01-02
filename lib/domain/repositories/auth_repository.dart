@@ -10,4 +10,8 @@ abstract class AuthRepository {
   });
 
   Future<Either<AppException, User>> getMe();
+
+  Future<Either<AppException, AuthCredentials>> googleLogin({
+    required String idToken,
+  });
 }

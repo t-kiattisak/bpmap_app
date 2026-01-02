@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bpmap_app/presentation/providers/auth_provider.dart';
 import 'package:bpmap_app/shared/components/button/action_button.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,7 @@ class LoginPage extends HookConsumerWidget {
 
     final loginState = ref.watch(loginControllerProvider);
     final isLoading = loginState is AsyncLoading;
+    log('loginState => >${loginState.whenData((value) => value)}');
 
     Future<void> handleLogin() async {
       await Future.delayed(const Duration(minutes: 1));
@@ -61,11 +64,19 @@ class LoginPage extends HookConsumerWidget {
               Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton.icon(
+                    child: ActionButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.error,
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await ref
+                              .read(loginControllerProvider.notifier)
+                              .googleLogin();
+                        } catch (e) {
+                          log('message :: $e');
+                        }
+                      },
                       icon: const FaIcon(FontAwesomeIcons.google, size: 20),
                       label: const Text('With Google'),
                     ),

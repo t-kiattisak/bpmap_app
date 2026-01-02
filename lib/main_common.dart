@@ -18,6 +18,7 @@ Future<void> mainCommon(Environment env) async {
 
   var configuredApp = AppConfig(
     environment: env,
+    googleServerClientId: dotenv.env[AppConstants.googleServerClientIdKey]!,
     appName: dotenv.env[AppConstants.appNameKey]!,
     apiBaseUrl: dotenv.env[AppConstants.baseUrlKey]!,
   );

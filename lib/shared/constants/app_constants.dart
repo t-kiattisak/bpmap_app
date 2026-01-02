@@ -2,6 +2,7 @@ class AppConstants {
   // Env Keys
   static const String appNameKey = 'APP_NAME';
   static const String baseUrlKey = 'BASE_URL';
+  static const String googleServerClientIdKey = 'GOOGLE_SERVER_CLIENT_ID';
 
   // Default Values (Optional fallback)
   static const String defaultAppName = 'BP Map';
