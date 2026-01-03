@@ -32,6 +32,6 @@ class HomeRoute extends GoRouteData with $HomeRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const MyHomePage(title: 'BP Map');
+    return const HomePage();
   }
 }

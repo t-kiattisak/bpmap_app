@@ -19,6 +19,7 @@ abstract class AuthResponseModel with _$AuthResponseModel {
 abstract class AuthTokenData with _$AuthTokenData {
   const factory AuthTokenData({
     @JsonKey(name: 'access_token') required String accessToken,
+    @JsonKey(name: 'refresh_token') required String refreshToken,
     @JsonKey(name: 'token_type') required String tokenType,
     @JsonKey(name: 'expires_in') required int expiresIn,
   }) = _AuthTokenData;

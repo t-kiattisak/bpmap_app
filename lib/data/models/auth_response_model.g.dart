@@ -23,6 +23,7 @@ Map<String, dynamic> _$AuthResponseModelToJson(_AuthResponseModel instance) =>
 _AuthTokenData _$AuthTokenDataFromJson(Map<String, dynamic> json) =>
     _AuthTokenData(
       accessToken: json['access_token'] as String,
+      refreshToken: json['refresh_token'] as String,
       tokenType: json['token_type'] as String,
       expiresIn: (json['expires_in'] as num).toInt(),
     );
@@ -30,6 +31,7 @@ _AuthTokenData _$AuthTokenDataFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AuthTokenDataToJson(_AuthTokenData instance) =>
     <String, dynamic>{
       'access_token': instance.accessToken,
+      'refresh_token': instance.refreshToken,
       'token_type': instance.tokenType,
       'expires_in': instance.expiresIn,
     };

@@ -32,7 +32,6 @@ class LoginPage extends HookConsumerWidget {
 
     final loginState = ref.watch(loginControllerProvider);
     final isLoading = loginState is AsyncLoading;
-    log('loginState => >${loginState.whenData((value) => value)}');
 
     Future<void> handleLogin() async {
       await Future.delayed(const Duration(minutes: 1));
@@ -83,11 +82,21 @@ class LoginPage extends HookConsumerWidget {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: ElevatedButton.icon(
+                    child: ActionButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary,
+                        backgroundColor: const Color(
+                          0xFF00B900,
+                        ), // Line Green Color
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await ref
+                              .read(loginControllerProvider.notifier)
+                              .lineLogin();
+                        } catch (e) {
+                          log('message :: $e');
+                        }
+                      },
                       icon: const FaIcon(FontAwesomeIcons.line, size: 20),
                       label: const Text('With Line'),
                     ),

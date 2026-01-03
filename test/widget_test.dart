@@ -25,6 +25,7 @@ void main() {
               appName: 'Test App',
               apiBaseUrl: 'https://test.com',
               googleServerClientId: 'test',
+              lineChannelId: 'test',
             ),
           ),
         ],
