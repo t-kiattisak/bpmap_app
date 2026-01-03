@@ -1,4 +1,4 @@
-package com.example.bpmap_app
+package com.bpmap.disaster
 
 import io.flutter.embedding.android.FlutterActivity
 

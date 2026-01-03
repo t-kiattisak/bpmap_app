@@ -1,3 +1,4 @@
+import 'package:bpmap_app/presentation/providers/notification_backend_provider.dart';
 import 'package:bpmap_app/shared/domain/providers/app_config_provider.dart';
 import 'package:bpmap_app/presentation/router/router_provider.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(appConfigProvider);
     final router = ref.watch(routerProvider);
+    ref.watch(subscribeToNotificationsProvider);
 
     return MaterialApp.router(
       title: config.appName,

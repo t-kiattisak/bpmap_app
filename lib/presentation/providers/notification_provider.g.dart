@@ -55,7 +55,7 @@ final class NotificationServiceProvider
 }
 
 String _$notificationServiceHash() =>
-    r'b2df85eebc8053d4a002f63331a8f5f60ea73409';
+    r'9121c8e10427c153e72fe76bb7575ce473f25280';
 
 @ProviderFor(notificationToken)
 const notificationTokenProvider = NotificationTokenProvider._();

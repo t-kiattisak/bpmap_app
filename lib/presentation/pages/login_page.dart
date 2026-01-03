@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bpmap_app/presentation/providers/auth_provider.dart';
 import 'package:bpmap_app/shared/components/button/action_button.dart';
 import 'package:flutter/material.dart';
@@ -61,22 +63,40 @@ class LoginPage extends HookConsumerWidget {
               Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton.icon(
+                    child: ActionButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.error,
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await ref
+                              .read(loginControllerProvider.notifier)
+                              .googleLogin();
+                        } catch (e) {
+                          log('message :: $e');
+                        }
+                      },
                       icon: const FaIcon(FontAwesomeIcons.google, size: 20),
                       label: const Text('With Google'),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: ElevatedButton.icon(
+                    child: ActionButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary,
+                        backgroundColor: const Color(
+                          0xFF00B900,
+                        ), // Line Green Color
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await ref
+                              .read(loginControllerProvider.notifier)
+                              .lineLogin();
+                        } catch (e) {
+                          log('message :: $e');
+                        }
+                      },
                       icon: const FaIcon(FontAwesomeIcons.line, size: 20),
                       label: const Text('With Line'),
                     ),

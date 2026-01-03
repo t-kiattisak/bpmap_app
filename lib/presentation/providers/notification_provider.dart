@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:bpmap_app/domain/entities/notification_permission_status.dart';
+import 'package:bpmap_app/shared/domain/providers/local_notification_provider.dart';
 
 part 'notification_provider.g.dart';
 
@@ -15,6 +16,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final LocalNotificationService _localNotificationService;
+
+  NotificationService(this._localNotificationService);
 
   String? _currentToken;
   final _tokenController = StreamController<String?>.broadcast();
@@ -35,6 +39,7 @@ class NotificationService {
   String? get currentToken => _currentToken;
 
   Future<void> initialize() async {
+    await _localNotificationService.initialize();
     await _requestPermission();
     await _setupMessageHandlers();
     await _refreshToken();
@@ -106,6 +111,12 @@ class NotificationService {
 
       if (message.notification != null) {
         log('Message notification: ${message.notification?.title}');
+        _localNotificationService.showNotification(
+          id: message.hashCode,
+          title: message.notification?.title ?? '',
+          body: message.notification?.body ?? '',
+          payload: message.data.toString(),
+        );
       }
 
       _foregroundMessageController.add(message);
@@ -147,7 +158,8 @@ class NotificationService {
 
 @Riverpod(keepAlive: true)
 NotificationService notificationService(Ref ref) {
-  final service = NotificationService();
+  final localService = ref.watch(localNotificationServiceProvider);
+  final service = NotificationService(localService);
   ref.onDispose(() => service.dispose());
   return service;
 }
