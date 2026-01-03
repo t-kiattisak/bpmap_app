@@ -56,6 +56,12 @@ dependencies:
   google_sign_in: ^7.2.0
   flutter_line_sdk: ^2.6.2
   device_info_plus: ^12.3.0
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+  flutter_map_marker_popup: ^8.1.0
+  flutter_map_cancellable_tile_provider: ^3.1.1
+  geolocator: ^14.0.2
+  animations: ^2.1.1
 
 dev_dependencies:
   flutter_test:

@@ -7,14 +7,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-class HomePage extends StatefulHookConsumerWidget {
-  const HomePage({super.key});
+class MapPage extends StatefulHookConsumerWidget {
+  const MapPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MapPageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
+class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
     final layers = useState<List<MapLayer>>([
