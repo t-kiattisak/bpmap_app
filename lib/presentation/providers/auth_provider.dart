@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bpmap_app/data/models/user_me_model.dart';
 import 'package:bpmap_app/presentation/providers/notification_provider.dart';
 import 'package:bpmap_app/shared/domain/providers/app_config_provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -25,6 +26,13 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) {
 AuthRepository authRepository(Ref ref) {
   final remoteDataSource = ref.watch(authRemoteDataSourceProvider);
   return AuthRepositoryImpl(remoteDataSource);
+}
+
+@riverpod
+Future<UserMeModel> fetchMe(Ref ref) async {
+  final authRepository = ref.watch(authRepositoryProvider);
+  final me = await authRepository.getMe();
+  return me.fold((l) => throw l, (r) => r);
 }
 
 @riverpod

@@ -1,6 +1,8 @@
+import 'package:bpmap_app/presentation/widgets/maps/map_search_bar.dart';
+import 'package:bpmap_app/shared/components/layouts/main_layout.dart';
 import 'package:bpmap_app/shared/components/maps/label_marker.dart';
 import 'package:bpmap_app/shared/components/maps/map.dart';
-import 'package:bpmap_app/shared/components/maps/map_layer_panel.dart';
+import 'package:bpmap_app/presentation/widgets/maps/map_layer_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -148,20 +150,27 @@ class _HomePageState extends ConsumerState<HomePage> {
       },
     );
 
-    return Scaffold(
-      body: Stack(
+    return MainLayout(
+      title: [const Expanded(child: MapSearchBar())],
+      child: Stack(
         children: [
           map,
-          Positioned(
-            top: 60,
-            left: 16,
-            child: MapLayerPanel(
-              layers: layers.value,
-              onDelete: (layer) {
-                final newLayers = List<MapLayer>.from(layers.value);
-                newLayers.remove(layer);
-                layers.value = newLayers;
-              },
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: MapLayerPanel(
+                    layers: layers.value,
+                    onDelete: (layer) {
+                      final newLayers = List<MapLayer>.from(layers.value);
+                      newLayers.remove(layer);
+                      layers.value = newLayers;
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],

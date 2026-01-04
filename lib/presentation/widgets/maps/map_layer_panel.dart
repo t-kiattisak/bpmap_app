@@ -16,6 +16,78 @@ class MapLayerPanel extends HookWidget {
   Widget build(BuildContext context) {
     final isOpen = useState(false);
     final visibleLayerIds = useState<Set<String>>({});
+    final selectedBaseMap = useState('ถนน');
+
+    void showBaseMapSelector() {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Padding(
+                padding: const EdgeInsets.only(
+                  top: 16,
+                  bottom: 32,
+                  left: 16,
+                  right: 16,
+                ),
+                child: RadioGroup<String>(
+                  groupValue: selectedBaseMap.value,
+                  onChanged: (value) {
+                    if (value != null) {
+                      selectedBaseMap.value = value;
+                      setState(() {});
+                    }
+                    Navigator.pop(context);
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'แผนที่ฐาน',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close, color: Colors.red),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      ...[
+                        'สถานที่',
+                        'ถนน',
+                        'จราจร',
+                        'เขตการปกครอง',
+                        'ดาวเทียม (ไทยโชต)',
+                      ].map((type) {
+                        return RadioListTile<String>(
+                          value: type,
+                          title: Text(type),
+                          contentPadding: EdgeInsets.zero,
+                          activeColor: Colors.red,
+                          controlAffinity: ListTileControlAffinity.leading,
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +97,11 @@ class MapLayerPanel extends HookWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: 6,
           children: [
-            _LayerButton(icon: Icons.layers, isActive: false, onTap: () {}),
+            _LayerButton(
+              icon: Icons.layers,
+              isActive: false,
+              onTap: showBaseMapSelector,
+            ),
             const SizedBox(width: 8),
             _LayerButton(
               icon: Icons.filter_none,

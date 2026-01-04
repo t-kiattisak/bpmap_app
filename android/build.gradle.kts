@@ -20,10 +20,8 @@ subprojects {
 }
 
 subprojects {
-    afterEvaluate {
-        tasks.withType<JavaCompile>().configureEach {
-            options.compilerArgs.add("-Xlint:-options")
-        }
+    tasks.withType<JavaCompile>().configureEach {
+        options.compilerArgs.add("-Xlint:-options")
     }
 }
 

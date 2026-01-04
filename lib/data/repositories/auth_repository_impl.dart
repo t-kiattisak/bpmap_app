@@ -2,11 +2,11 @@ import 'package:bpmap_app/data/datasources/auth_remote_datasource.dart';
 
 import 'package:bpmap_app/data/models/login_request_model.dart';
 import 'package:bpmap_app/data/models/social_login_request_model.dart';
+import 'package:bpmap_app/data/models/user_me_model.dart';
 import 'package:bpmap_app/domain/repositories/auth_repository.dart';
 import 'package:bpmap_app/shared/domain/models/either.dart';
 import 'package:bpmap_app/shared/exceptions/http_exception.dart';
 import 'package:bpmap_app/domain/entities/auth_credentials.dart';
-import 'package:bpmap_app/domain/entities/user.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
@@ -34,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<AppException, User>> getMe() async {
+  Future<Either<AppException, UserMeModel>> getMe() async {
     final result = await _remoteDataSource.getMe();
     return result.fold((exception) => Left(exception), (user) => Right(user));
   }

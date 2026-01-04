@@ -41,7 +41,7 @@ final class LoadingServiceProvider
   }
 }
 
-String _$loadingServiceHash() => r'c3654b64eb7a8f350dcee994ccec0ea3a9c360fc';
+String _$loadingServiceHash() => r'61689b5dd91c1a110e1856d252accbb3ba11fb53';
 
 abstract class _$LoadingService extends $Notifier<bool> {
   bool build();
