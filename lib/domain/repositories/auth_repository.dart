@@ -1,7 +1,7 @@
+import 'package:bpmap_app/data/models/user_me_model.dart';
 import 'package:bpmap_app/shared/domain/models/either.dart';
 import 'package:bpmap_app/shared/exceptions/http_exception.dart';
 import 'package:bpmap_app/domain/entities/auth_credentials.dart';
-import 'package:bpmap_app/domain/entities/user.dart';
 
 abstract class AuthRepository {
   Future<Either<AppException, AuthCredentials>> login({
@@ -12,7 +12,7 @@ abstract class AuthRepository {
     required String pushToken,
   });
 
-  Future<Either<AppException, User>> getMe();
+  Future<Either<AppException, UserMeModel>> getMe();
 
   Future<Either<AppException, AuthCredentials>> googleLogin({
     required String idToken,

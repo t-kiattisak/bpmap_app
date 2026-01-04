@@ -1,5 +1,3 @@
-import 'package:bpmap_app/presentation/widgets/maps/map_search_bar.dart';
-import 'package:bpmap_app/shared/components/layouts/main_layout.dart';
 import 'package:bpmap_app/shared/components/maps/label_marker.dart';
 import 'package:bpmap_app/shared/components/maps/map.dart';
 import 'package:bpmap_app/presentation/widgets/maps/map_layer_panel.dart';
@@ -9,14 +7,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-class HomePage extends StatefulHookConsumerWidget {
-  const HomePage({super.key});
+class MapPage extends StatefulHookConsumerWidget {
+  const MapPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MapPageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
+class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
     final layers = useState<List<MapLayer>>([
@@ -150,27 +148,20 @@ class _HomePageState extends ConsumerState<HomePage> {
       },
     );
 
-    return MainLayout(
-      title: [const Expanded(child: MapSearchBar())],
-      child: Stack(
+    return Scaffold(
+      body: Stack(
         children: [
           map,
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: MapLayerPanel(
-                    layers: layers.value,
-                    onDelete: (layer) {
-                      final newLayers = List<MapLayer>.from(layers.value);
-                      newLayers.remove(layer);
-                      layers.value = newLayers;
-                    },
-                  ),
-                ),
-              ],
+          Positioned(
+            top: 60,
+            left: 16,
+            child: MapLayerPanel(
+              layers: layers.value,
+              onDelete: (layer) {
+                final newLayers = List<MapLayer>.from(layers.value);
+                newLayers.remove(layer);
+                layers.value = newLayers;
+              },
             ),
           ),
         ],

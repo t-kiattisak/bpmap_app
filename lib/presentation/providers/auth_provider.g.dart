@@ -98,6 +98,45 @@ final class AuthRepositoryProvider
 
 String _$authRepositoryHash() => r'43e05b07a705006cf920b080f78421ecc8bab1d9';
 
+@ProviderFor(fetchMe)
+const fetchMeProvider = FetchMeProvider._();
+
+final class FetchMeProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<UserMeModel>,
+          UserMeModel,
+          FutureOr<UserMeModel>
+        >
+    with $FutureModifier<UserMeModel>, $FutureProvider<UserMeModel> {
+  const FetchMeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fetchMeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fetchMeHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<UserMeModel> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<UserMeModel> create(Ref ref) {
+    return fetchMe(ref);
+  }
+}
+
+String _$fetchMeHash() => r'4922ebb8ffda749f65519ebcf03eac84ce8d14eb';
+
 @ProviderFor(LoginController)
 const loginControllerProvider = LoginControllerProvider._();
 

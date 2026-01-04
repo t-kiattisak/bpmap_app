@@ -1,3 +1,4 @@
+import 'package:bpmap_app/data/models/user_me_model.dart';
 import 'package:bpmap_app/shared/data/remote/network_service.dart';
 import 'package:bpmap_app/shared/domain/models/either.dart';
 import 'package:bpmap_app/shared/exceptions/http_exception.dart';
@@ -6,14 +7,13 @@ import 'package:bpmap_app/data/models/login_request_model.dart';
 import 'package:bpmap_app/data/models/social_login_request_model.dart';
 
 import 'package:bpmap_app/domain/entities/auth_credentials.dart';
-import 'package:bpmap_app/data/models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<Either<AppException, AuthCredentials>> login(
     LoginRequestModel request,
   );
 
-  Future<Either<AppException, UserModel>> getMe();
+  Future<Either<AppException, UserMeModel>> getMe();
 
   Future<Either<AppException, AuthCredentials>> googleLogin(
     SocialLoginRequestModel request,
@@ -120,22 +120,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<Either<AppException, UserModel>> getMe() async {
+  Future<Either<AppException, UserMeModel>> getMe() async {
     final response = await _networkService.get('/api/users/me');
 
     return response.fold((exception) => Left(exception), (response) {
       try {
         final data = response.data;
-        if (data is Map<String, dynamic>) {
-          return Right(UserModel.fromJson(data));
-        }
-        return Left(
-          AppException(
-            message: 'Invalid response format',
-            statusCode: 0,
-            identifier: 'AuthRemoteDataSourceImpl.getMe',
-          ),
-        );
+        return Right(UserMeModel.fromJson(data));
       } catch (e) {
         return Left(
           AppException(
