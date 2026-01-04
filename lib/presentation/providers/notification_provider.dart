@@ -112,7 +112,7 @@ class NotificationService {
       if (message.notification != null) {
         log('Message notification: ${message.notification?.title}');
         _localNotificationService.showNotification(
-          id: message.hashCode,
+          id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
           title: message.notification?.title ?? '',
           body: message.notification?.body ?? '',
           payload: message.data.toString(),

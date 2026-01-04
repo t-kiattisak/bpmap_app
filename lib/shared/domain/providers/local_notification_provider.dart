@@ -35,10 +35,14 @@ class LocalNotificationService {
   }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-          'high_importance_channel', // id
-          'High Importance Notifications', // title
+          'high_importance_channel',
+          'High Importance Notifications',
+          groupKey: 'com.bpmap.disaster.ALERTS',
+          channelDescription:
+              'This channel is used for important notifications.',
           importance: Importance.max,
           priority: Priority.high,
+          ticker: 'ticker',
         );
 
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
