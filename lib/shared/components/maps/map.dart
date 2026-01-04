@@ -92,7 +92,7 @@ class Map extends HookConsumerWidget {
         ),
         Positioned(
           bottom: 80,
-          left: 16,
+          left: 8,
           child: MapControls(
             onCurrentLocation: _getCurrentLocation,
             onZoomIn: () {
