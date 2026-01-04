@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class MapLayerPanel extends HookWidget {
@@ -166,12 +167,26 @@ class MapLayerPanel extends HookWidget {
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              const Text(
-                                'ชั้นข้อมูลที่แสดง',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                              Expanded(
+                                child: const Text(
+                                  'ชั้นข้อมูลที่แสดง',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  MapClassDataRoute().push(context);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: const Icon(Icons.add),
                                 ),
                               ),
                             ],

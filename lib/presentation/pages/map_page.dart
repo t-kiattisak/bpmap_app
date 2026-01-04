@@ -148,24 +148,28 @@ class _MapPageState extends ConsumerState<MapPage> {
       },
     );
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          map,
-          Positioned(
-            top: 60,
-            left: 16,
-            child: MapLayerPanel(
-              layers: layers.value,
-              onDelete: (layer) {
-                final newLayers = List<MapLayer>.from(layers.value);
-                newLayers.remove(layer);
-                layers.value = newLayers;
-              },
-            ),
+    return Stack(
+      children: [
+        map,
+        SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: MapLayerPanel(
+                  layers: layers.value,
+                  onDelete: (layer) {
+                    final newLayers = List<MapLayer>.from(layers.value);
+                    newLayers.remove(layer);
+                    layers.value = newLayers;
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
