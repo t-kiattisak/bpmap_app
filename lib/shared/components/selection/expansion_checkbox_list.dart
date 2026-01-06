@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -22,6 +23,7 @@ class ExpansionCheckboxList<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(initiallyExpanded);
+    final appColors = context.appColors;
 
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -36,15 +38,15 @@ class ExpansionCheckboxList<T> extends HookWidget {
           isExpanded.value
               ? Icons.keyboard_arrow_up
               : Icons.keyboard_arrow_down,
-          color: Colors.grey[400],
+          color: appColors.textSecondary,
           size: 28,
         ),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: appColors.textPrimary,
           ),
         ),
         trailing: const SizedBox.shrink(),
@@ -61,14 +63,14 @@ class ExpansionCheckboxList<T> extends HookWidget {
               },
               title: Text(
                 labelBuilder(item),
-                style: const TextStyle(fontSize: 14, color: Colors.black87),
+                style: TextStyle(fontSize: 14, color: appColors.textPrimary),
               ),
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               dense: true,
-              activeColor: Colors.black87,
-              checkColor: Colors.white,
-              side: const BorderSide(color: Colors.grey),
+              activeColor: appColors.textPrimary,
+              checkColor: appColors.surface,
+              side: BorderSide(color: appColors.border),
               visualDensity: VisualDensity.compact,
             ),
           );

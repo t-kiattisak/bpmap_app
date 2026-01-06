@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:bpmap_app/presentation/widgets/maps/layer_filter_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -63,20 +64,25 @@ class MapClassDataPage extends HookWidget {
       groups.value = newGroups;
     }
 
+    final appColors = context.appColors;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'ชั้นข้อมูลที่แสดง',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: appColors.textPrimary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: appColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: appColors.iconPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: appColors.surface,
       body: SafeArea(
         child: LayerFilterPanel(
           groups: groups.value,

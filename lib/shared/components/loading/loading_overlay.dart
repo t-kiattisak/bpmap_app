@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class LoadingOverlay extends StatelessWidget {
@@ -14,8 +15,11 @@ class LoadingOverlay extends StatelessWidget {
         if (isLoading)
           Stack(
             children: [
-              const ModalBarrier(dismissible: false, color: Colors.black54),
-              Center(child: CircularProgressIndicator.adaptive()),
+              ModalBarrier(
+                dismissible: false,
+                color: context.appColors.textPrimary.withValues(alpha: 0.5),
+              ),
+              const Center(child: CircularProgressIndicator.adaptive()),
             ],
           ),
       ],

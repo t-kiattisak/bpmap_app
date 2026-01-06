@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:bpmap_app/shared/components/selection/expansion_checkbox_list.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +14,9 @@ class LayerFilterPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = context.appColors;
     return Container(
-      color: Colors.white,
+      color: appColors.surface,
       child: ListView.builder(
         itemCount: groups.length,
         shrinkWrap: true,

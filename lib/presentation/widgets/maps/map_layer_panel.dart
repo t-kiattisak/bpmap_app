@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,12 @@ class MapLayerPanel extends HookWidget {
     final visibleLayerIds = useState<Set<String>>({});
     final selectedBaseMap = useState('ถนน');
 
+    final appColors = context.appColors;
+
     void showBaseMapSelector() {
       showModalBottomSheet(
         context: context,
-        backgroundColor: Colors.white,
+        backgroundColor: appColors.surface,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         ),
@@ -59,7 +62,7 @@ class MapLayerPanel extends HookWidget {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.close, color: Colors.red),
+                            icon: Icon(Icons.close, color: appColors.error),
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],
@@ -76,7 +79,7 @@ class MapLayerPanel extends HookWidget {
                           value: type,
                           title: Text(type),
                           contentPadding: EdgeInsets.zero,
-                          activeColor: Colors.red,
+                          activeColor: appColors.error,
                           controlAffinity: ListTileControlAffinity.leading,
                         );
                       }),
@@ -133,11 +136,11 @@ class MapLayerPanel extends HookWidget {
                       clipBehavior: Clip.antiAlias,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: appColors.surface,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
+                            color: appColors.textPrimary.withValues(alpha: 0.1),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -152,15 +155,15 @@ class MapLayerPanel extends HookWidget {
                               Container(
                                 width: 24,
                                 height: 24,
-                                decoration: const BoxDecoration(
-                                  color: Colors.black87,
+                                decoration: BoxDecoration(
+                                  color: appColors.textPrimary,
                                   shape: BoxShape.circle,
                                 ),
                                 alignment: Alignment.center,
                                 child: Text(
                                   '${layers.length}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                  style: TextStyle(
+                                    color: appColors.surface,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
                                   ),
@@ -168,12 +171,12 @@ class MapLayerPanel extends HookWidget {
                               ),
                               const SizedBox(width: 8),
                               Expanded(
-                                child: const Text(
+                                child: Text(
                                   'ชั้นข้อมูลที่แสดง',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
+                                    color: appColors.textPrimary,
                                   ),
                                 ),
                               ),
@@ -183,7 +186,7 @@ class MapLayerPanel extends HookWidget {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: appColors.surface,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: const Icon(Icons.add),
@@ -254,17 +257,18 @@ class _LayerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = context.appColors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: isActive ? Colors.black87 : Colors.white,
+          color: isActive ? appColors.textPrimary : appColors.surface,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: appColors.textPrimary.withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -272,7 +276,7 @@ class _LayerButton extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          color: isActive ? Colors.white : Colors.black87,
+          color: isActive ? appColors.surface : appColors.textPrimary,
           size: 20,
         ),
       ),
@@ -295,14 +299,15 @@ class _LayerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = context.appColors;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 2),
-            child: Icon(Icons.drag_indicator, color: Colors.red, size: 20),
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Icon(Icons.drag_indicator, color: appColors.error, size: 20),
           ),
           const SizedBox(width: 8),
           GestureDetector(
@@ -312,8 +317,8 @@ class _LayerItem extends StatelessWidget {
               child: Icon(
                 Icons.visibility,
                 color: isVisible
-                    ? Colors.black87
-                    : Colors.grey.withValues(
+                    ? appColors.textPrimary
+                    : appColors.textSecondary.withValues(
                         alpha: 0.3,
                       ), // Updated visual here too
                 size: 20,
@@ -326,16 +331,22 @@ class _LayerItem extends StatelessWidget {
               name,
               style: TextStyle(
                 fontSize: 14,
-                color: isVisible ? Colors.black87 : Colors.grey,
+                color: isVisible
+                    ? appColors.textPrimary
+                    : appColors.textSecondary,
               ),
             ),
           ),
           const SizedBox(width: 8),
           GestureDetector(
             onTap: onDelete,
-            child: const Padding(
-              padding: EdgeInsets.only(top: 2),
-              child: Icon(Icons.delete_outline, color: Colors.grey, size: 24),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Icon(
+                Icons.delete_outline,
+                color: appColors.textSecondary,
+                size: 24,
+              ),
             ),
           ),
         ],
