@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
@@ -5,10 +6,10 @@ class FadeOpenContainer extends StatelessWidget {
   final Widget Function(BuildContext, VoidCallback) closedBuilder;
   final Widget Function(BuildContext, VoidCallback) openBuilder;
   final ShapeBorder closedShape;
-  final Color closedColor;
+  final Color? closedColor;
   final Duration transitionDuration;
   final double closedElevation;
-  final Color openColor;
+  final Color? openColor;
 
   const FadeOpenContainer({
     super.key,
@@ -17,10 +18,10 @@ class FadeOpenContainer extends StatelessWidget {
     this.closedShape = const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(4.0)),
     ),
-    this.closedColor = Colors.white,
+    this.closedColor,
     this.transitionDuration = const Duration(milliseconds: 300),
     this.closedElevation = 0,
-    this.openColor = Colors.white,
+    this.openColor,
   });
 
   @override
@@ -30,8 +31,8 @@ class FadeOpenContainer extends StatelessWidget {
       transitionDuration: transitionDuration,
       closedElevation: closedElevation,
       closedShape: closedShape,
-      closedColor: closedColor,
-      openColor: openColor,
+      closedColor: closedColor ?? context.appColors.surface,
+      openColor: openColor ?? context.appColors.surface,
       openBuilder: openBuilder,
       closedBuilder: closedBuilder,
     );

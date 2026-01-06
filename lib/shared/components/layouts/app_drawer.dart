@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:bpmap_app/presentation/providers/auth_provider.dart';
 import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:bpmap_app/shared/domain/providers/loading_provider.dart';
@@ -18,14 +19,13 @@ class AppDrawer extends ConsumerWidget {
     );
 
     final currentPath = GoRouterState.of(context).uri.toString();
+    final appColors = context.appColors;
 
     return Drawer(
       elevation: 1,
       child: Container(
         decoration: BoxDecoration(
-          border: Border(
-            right: BorderSide(color: Colors.grey.withValues(alpha: 0.1)),
-          ),
+          border: Border(right: BorderSide(color: appColors.border)),
         ),
         child: Column(
           children: [
@@ -34,13 +34,13 @@ class AppDrawer extends ConsumerWidget {
               error: (error, stackTrace) => Container(
                 padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
+                  color: appColors.surface,
                   image: DecorationImage(
                     image: NetworkImage(
                       'https://www.transparenttextures.com/patterns/cubes.png',
                     ),
                     colorFilter: ColorFilter.mode(
-                      Colors.grey.withValues(alpha: 0.05),
+                      appColors.textPrimary.withValues(alpha: 0.05),
                       BlendMode.srcATop,
                     ),
                     repeat: ImageRepeat.repeat,
@@ -50,10 +50,12 @@ class AppDrawer extends ConsumerWidget {
                   children: [
                     CircleAvatar(
                       radius: 24,
-                      backgroundColor: Colors.grey[800],
-                      child: const Icon(
+                      backgroundColor: appColors.textPrimary.withValues(
+                        alpha: 0.8,
+                      ),
+                      child: Icon(
                         Icons.person,
-                        color: Colors.white,
+                        color: appColors.surface,
                         size: 30,
                       ),
                     ),
@@ -69,13 +71,13 @@ class AppDrawer extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: appColors.textPrimary,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right, color: Colors.black54),
+                    Icon(Icons.chevron_right, color: appColors.textSecondary),
                   ],
                 ),
               ),
@@ -84,13 +86,13 @@ class AppDrawer extends ConsumerWidget {
                 return Container(
                   padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
+                    color: appColors.surface,
                     image: DecorationImage(
                       image: NetworkImage(
                         'https://www.transparenttextures.com/patterns/cubes.png',
                       ),
                       colorFilter: ColorFilter.mode(
-                        Colors.grey.withValues(alpha: 0.05),
+                        appColors.textSecondary.withValues(alpha: 0.05),
                         BlendMode.srcATop,
                       ),
                       repeat: ImageRepeat.repeat,
@@ -100,10 +102,12 @@ class AppDrawer extends ConsumerWidget {
                     children: [
                       CircleAvatar(
                         radius: 24,
-                        backgroundColor: Colors.grey[800],
-                        child: const Icon(
+                        backgroundColor: appColors.textPrimary.withValues(
+                          alpha: 0.8,
+                        ),
+                        child: Icon(
                           Icons.person,
-                          color: Colors.white,
+                          color: appColors.surface,
                           size: 30,
                         ),
                       ),
@@ -119,7 +123,7 @@ class AppDrawer extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color: appColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -127,13 +131,13 @@ class AppDrawer extends ConsumerWidget {
                               '(Authenticated)',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.red.withValues(alpha: 0.8),
+                                color: appColors.success.withValues(alpha: 0.8),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(Icons.chevron_right, color: Colors.black54),
+                      Icon(Icons.chevron_right, color: appColors.textSecondary),
                     ],
                   ),
                 );
@@ -243,12 +247,13 @@ class _DrawerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = context.appColors;
     return ListTile(
       leading: SizedBox(
         width: 24,
         child: Icon(
           icon,
-          color: isActive ? Colors.black87 : const Color(0xFF2C3E50),
+          color: isActive ? appColors.iconPrimary : appColors.textSecondary,
           size: 20,
         ),
       ),
@@ -257,11 +262,13 @@ class _DrawerItem extends StatelessWidget {
         style: TextStyle(
           fontSize: 14,
           fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-          color: Colors.black87,
+          color: appColors.textPrimary,
         ),
       ),
       onTap: onTap,
-      tileColor: isActive ? Colors.grey[100] : null,
+      tileColor: isActive
+          ? appColors.textSecondary.withValues(alpha: 0.1)
+          : null,
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
       dense: true,
       horizontalTitleGap: 16,

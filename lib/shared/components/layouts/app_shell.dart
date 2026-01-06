@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:bpmap_app/shared/components/layouts/app_drawer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -46,7 +47,7 @@ class AppShell extends HookWidget {
     }
 
     return Material(
-      color: const Color(0xFFF5F5F5),
+      color: context.appColors.surface,
       child: Stack(
         children: [
           AnimatedBuilder(
@@ -70,6 +71,7 @@ class AppShell extends HookWidget {
           AnimatedBuilder(
             animation: animationController,
             builder: (context, _) {
+              final appColors = context.appColors;
               return Transform(
                 alignment: Alignment.centerLeft,
                 transform: Matrix4.identity()
@@ -96,11 +98,11 @@ class AppShell extends HookWidget {
                                 icon: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: appColors.surface,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(
+                                        color: appColors.textPrimary.withValues(
                                           alpha: 0.1,
                                         ),
                                         blurRadius: 4,
@@ -112,7 +114,7 @@ class AppShell extends HookWidget {
                                     isDrawerOpen.value
                                         ? Icons.close
                                         : Icons.list,
-                                    color: Colors.black87,
+                                    color: appColors.iconPrimary,
                                   ),
                                 ),
                                 onPressed: toggleDrawer,

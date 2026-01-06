@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:bpmap_app/shared/components/maps/label_marker.dart';
 import 'package:bpmap_app/shared/components/maps/map.dart';
 import 'package:bpmap_app/presentation/widgets/maps/map_layer_panel.dart';
@@ -41,10 +42,12 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
     ]);
 
+    final appColors = context.appColors;
+
     final markersData = [
       (
         point: const LatLng(13.7563, 100.5018),
-        color: Colors.blue,
+        color: appColors.brandBlue,
         data: {
           'score': '23',
           'title': 'ระดับความล่อแหลม (ก่อน/หลัง)',
@@ -57,7 +60,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       (
         point: const LatLng(13.7663, 100.5118),
-        color: Colors.red,
+        color: appColors.error,
         data: {
           'score': '30',
           'title': 'ระดับความล่อแหลม (ก่อน/หลัง)',
@@ -70,7 +73,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       (
         point: const LatLng(13.7463, 100.4918),
-        color: Colors.green,
+        color: appColors.success,
         data: {
           'score': '10',
           'title': 'ระดับความล่อแหลม (ก่อน/หลัง)',
@@ -121,10 +124,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                 children: [
                   Text(
                     info['title'] as String,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
-                      color: Color(0xFF2C3E50),
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -133,9 +136,9 @@ class _MapPageState extends ConsumerState<MapPage> {
                       padding: const EdgeInsets.only(bottom: 4.0),
                       child: Text(
                         item,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: Color(0xFF34495E),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ),

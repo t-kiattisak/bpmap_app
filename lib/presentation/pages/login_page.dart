@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 
 import 'package:bpmap_app/presentation/providers/auth_provider.dart';
 import 'package:bpmap_app/shared/components/button/action_button.dart';
@@ -24,7 +25,7 @@ class LoginPage extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(next.error.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: context.appColors.error,
           ),
         );
       }
@@ -45,8 +46,8 @@ class LoginPage extends HookConsumerWidget {
       }
     }
 
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
+    final textTheme = Theme.of(context).textTheme;
+    final appColors = context.appColors;
 
     return Scaffold(
       body: SafeArea(
@@ -65,7 +66,7 @@ class LoginPage extends HookConsumerWidget {
                   Expanded(
                     child: ActionButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.error,
+                        backgroundColor: appColors.error,
                       ),
                       onPressed: () async {
                         try {
@@ -84,9 +85,8 @@ class LoginPage extends HookConsumerWidget {
                   Expanded(
                     child: ActionButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(
-                          0xFF00B900,
-                        ), // Line Green Color
+                        backgroundColor:
+                            appColors.brandLine, // Line Green Color
                       ),
                       onPressed: () async {
                         try {

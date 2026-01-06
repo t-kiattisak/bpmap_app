@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:bpmap_app/presentation/pages/map_search_page.dart';
 import 'package:bpmap_app/shared/components/animations/fade_open_container.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +11,15 @@ class MapSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = context.appColors;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.surface,
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: appColors.textPrimary.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -49,9 +52,9 @@ class MapSearchBar extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.search,
-                              color: Colors.black87,
+                              color: appColors.textPrimary,
                               size: 24,
                             ),
                             const SizedBox(width: 8),
@@ -59,7 +62,7 @@ class MapSearchBar extends StatelessWidget {
                               'ค้นหาภัย',
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey[600],
+                                color: appColors.textSecondary,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -84,9 +87,10 @@ class MapSearchBar extends StatelessWidget {
     required IconData icon,
     VoidCallback? onTap,
   }) {
+    final appColors = context.appColors;
     return IconButton(
       onPressed: onTap,
-      icon: Icon(icon, color: Colors.black87),
+      icon: Icon(icon, color: appColors.textPrimary),
       splashRadius: 24,
     );
   }
