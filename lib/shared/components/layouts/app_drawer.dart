@@ -1,11 +1,14 @@
 import 'package:bpmap_app/presentation/providers/auth_provider.dart';
+import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:bpmap_app/shared/domain/providers/loading_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AppDrawer extends ConsumerWidget {
-  const AppDrawer({super.key});
+  final Function()? toogleDrawer;
+  const AppDrawer({super.key, this.toogleDrawer});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,62 +17,21 @@ class AppDrawer extends ConsumerWidget {
       loginControllerProvider.select((value) => value.value?.isLogin ?? false),
     );
 
+    final currentPath = GoRouterState.of(context).uri.toString();
+
     return Drawer(
-      child: Column(
-        children: [
-          me.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stackTrace) => Container(
-              padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F5),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    'https://www.transparenttextures.com/patterns/cubes.png',
-                  ),
-                  colorFilter: ColorFilter.mode(
-                    Colors.grey.withValues(alpha: 0.05),
-                    BlendMode.srcATop,
-                  ),
-                  repeat: ImageRepeat.repeat,
-                ),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Colors.grey[800],
-                    child: const Icon(
-                      Icons.person,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'เข้าสู่ระบบ',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, color: Colors.black54),
-                ],
-              ),
-            ),
-            data: (data) {
-              final user = data.data;
-              return Container(
+      elevation: 1,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            right: BorderSide(color: Colors.grey.withValues(alpha: 0.1)),
+          ),
+        ),
+        child: Column(
+          children: [
+            me.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) => Container(
                 padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF5F5F5),
@@ -101,7 +63,7 @@ class AppDrawer extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${user?.displayName ?? ''}',
+                            'เข้าสู่ระบบ',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -110,94 +72,157 @@ class AppDrawer extends ConsumerWidget {
                               color: Colors.black87,
                             ),
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '(Authenticated)',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.red.withValues(alpha: 0.8),
-                            ),
-                          ),
                         ],
                       ),
                     ),
                     const Icon(Icons.chevron_right, color: Colors.black54),
                   ],
                 ),
-              );
-            },
-          ),
+              ),
+              data: (data) {
+                final user = data.data;
+                return Container(
+                  padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F5F5),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        'https://www.transparenttextures.com/patterns/cubes.png',
+                      ),
+                      colorFilter: ColorFilter.mode(
+                        Colors.grey.withValues(alpha: 0.05),
+                        BlendMode.srcATop,
+                      ),
+                      repeat: ImageRepeat.repeat,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.grey[800],
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${user?.displayName ?? ''}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '(Authenticated)',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.red.withValues(alpha: 0.8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right, color: Colors.black54),
+                    ],
+                  ),
+                );
+              },
+            ),
 
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                children: [
-                  _DrawerItem(
-                    icon: Icons.home,
-                    title: 'หน้าหลัก',
-                    onTap: () {},
-                    isActive: true,
-                  ),
-                  _DrawerItem(
-                    icon: FontAwesomeIcons.newspaper,
-                    title: 'ข่าวสาร',
-                    onTap: () {},
-                  ),
-                  _DrawerItem(
-                    icon: FontAwesomeIcons.bullhorn,
-                    title: 'แจ้งภัย และคำร้อง',
-                    onTap: () {},
-                  ),
-                  _DrawerItem(
-                    icon: FontAwesomeIcons.truck,
-                    title: 'ติดตามความช่วยเหลือ',
-                    onTap: () {},
-                  ),
-                  _DrawerItem(
-                    icon: FontAwesomeIcons.boxOpen,
-                    title: 'หน่วยสนับสนุน',
-                    onTap: () {},
-                  ),
-                  const Divider(),
-                  _DrawerItem(
-                    icon: Icons.article_outlined,
-                    title: 'e-Learning',
-                    onTap: () {},
-                  ),
-                  _DrawerItem(
-                    icon: FontAwesomeIcons.headset,
-                    title: 'สายด่วน',
-                    onTap: () {},
-                  ),
-                  _DrawerItem(
-                    icon: FontAwesomeIcons.globe,
-                    title: 'เว็บไซต์',
-                    onTap: () {},
-                  ),
-                  _DrawerItem(
-                    icon: FontAwesomeIcons.circleInfo,
-                    title: 'เกี่ยวกับเรา',
-                    onTap: () {},
-                  ),
-                ],
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Column(
+                  children: [
+                    _DrawerItem(
+                      icon: Icons.home,
+                      title: 'หน้าหลัก',
+                      onTap: () {
+                        toogleDrawer?.call();
+                        HomeRoute().go(context);
+                      },
+                      isActive: currentPath == HomeRoute().location,
+                    ),
+                    _DrawerItem(
+                      icon: FontAwesomeIcons.newspaper,
+                      title: 'แมพ',
+                      onTap: () {
+                        toogleDrawer?.call();
+                        MapRoute().go(context);
+                      },
+                      isActive: currentPath == MapRoute().location,
+                    ),
+                    _DrawerItem(
+                      icon: FontAwesomeIcons.newspaper,
+                      title: 'ข่าวสาร',
+                      onTap: () {},
+                    ),
+                    _DrawerItem(
+                      icon: FontAwesomeIcons.bullhorn,
+                      title: 'แจ้งภัย และคำร้อง',
+                      onTap: () {},
+                    ),
+                    _DrawerItem(
+                      icon: FontAwesomeIcons.truck,
+                      title: 'ติดตามความช่วยเหลือ',
+                      onTap: () {},
+                    ),
+                    _DrawerItem(
+                      icon: FontAwesomeIcons.boxOpen,
+                      title: 'หน่วยสนับสนุน',
+                      onTap: () {},
+                    ),
+                    const Divider(),
+                    _DrawerItem(
+                      icon: Icons.article_outlined,
+                      title: 'e-Learning',
+                      onTap: () {},
+                    ),
+                    _DrawerItem(
+                      icon: FontAwesomeIcons.headset,
+                      title: 'สายด่วน',
+                      onTap: () {},
+                    ),
+                    _DrawerItem(
+                      icon: FontAwesomeIcons.globe,
+                      title: 'เว็บไซต์',
+                      onTap: () {},
+                    ),
+                    _DrawerItem(
+                      icon: FontAwesomeIcons.circleInfo,
+                      title: 'เกี่ยวกับเรา',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          if (isLoggedIn)
-            SafeArea(
-              bottom: true,
-              child: _DrawerItem(
-                icon: Icons.logout,
-                title: 'ออกจากระบบ',
-                onTap: () {
-                  ref.read(loadingServiceProvider.notifier).wrap(() async {
-                    await ref.read(loginControllerProvider.notifier).logout();
-                  });
-                },
+            if (isLoggedIn)
+              SafeArea(
+                bottom: true,
+                child: _DrawerItem(
+                  icon: Icons.logout,
+                  title: 'ออกจากระบบ',
+                  onTap: () {
+                    ref.read(loadingServiceProvider.notifier).wrap(() async {
+                      await ref.read(loginControllerProvider.notifier).logout();
+                    });
+                  },
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

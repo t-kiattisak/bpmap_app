@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:bpmap_app/shared/components/layouts/app_drawer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class MainLayout extends HookWidget {
+class AppShell extends HookWidget {
   final Widget child;
-  final List<Widget> title;
   final List<Widget>? actions;
+  final Color backgroundColor;
+  final List<Widget> title;
 
-  const MainLayout({
+  const AppShell({
     super.key,
     required this.child,
-    this.title = const [],
+    this.backgroundColor = Colors.transparent,
     this.actions,
+    this.title = const [],
   });
 
   @override
@@ -55,11 +57,11 @@ class MainLayout extends HookWidget {
                 bottom: 0,
                 left: 0,
                 width: slideAnimation.value,
-                child: const OverflowBox(
+                child: OverflowBox(
                   minWidth: 280,
                   maxWidth: 280,
                   alignment: Alignment.centerRight,
-                  child: AppDrawer(),
+                  child: AppDrawer(toogleDrawer: toggleDrawer),
                 ),
               );
             },
@@ -84,7 +86,7 @@ class MainLayout extends HookWidget {
                     children: [
                       Scaffold(
                         extendBodyBehindAppBar: true,
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: backgroundColor,
                         appBar: AppBar(
                           backgroundColor: Colors.transparent,
                           elevation: 0,
