@@ -59,7 +59,10 @@ class _AppWithBlocState extends State<AppWithBloc> {
       if (token != null && token.isNotEmpty) {
         await getIt<NotificationRepository>().subscribe(tokens: [token]);
       }
-    } catch (_) {}
+    } catch (e, stack) {
+      debugPrint('Subscribe to notifications failed: $e');
+      debugPrint(stack.toString());
+    }
   }
 
   @override

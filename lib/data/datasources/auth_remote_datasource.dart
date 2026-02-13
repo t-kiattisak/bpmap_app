@@ -44,7 +44,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final authResponse = AuthResponseModel.fromJson(resData);
         final credentials = AuthCredentials(
           accessToken: authResponse.data.accessToken,
-          refreshToken: authResponse.data.accessToken,
+          refreshToken: authResponse.data.refreshToken,
         );
         return Right(credentials);
       } catch (e) {
@@ -74,7 +74,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final authResponse = AuthResponseModel.fromJson(resData);
         final credentials = AuthCredentials(
           accessToken: authResponse.data.accessToken,
-          refreshToken: authResponse.data.accessToken,
+          refreshToken: authResponse.data.refreshToken,
         );
         return Right(credentials);
       } catch (e) {
@@ -104,7 +104,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final authResponse = AuthResponseModel.fromJson(resData);
         final credentials = AuthCredentials(
           accessToken: authResponse.data.accessToken,
-          refreshToken: authResponse.data.accessToken,
+          refreshToken: authResponse.data.refreshToken,
         );
         return Right(credentials);
       } catch (e) {

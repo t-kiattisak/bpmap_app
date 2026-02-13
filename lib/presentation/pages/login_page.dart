@@ -24,7 +24,20 @@ class LoginPage extends HookWidget {
     final textTheme = Theme.of(context).textTheme;
     final appColors = context.appColors;
 
+    final handleLogin = useCallback(() async {
+      if (formKey.currentState!.validate()) {
+        context.read<AuthBloc>().add(
+              AuthLogin(
+                username: emailController.text,
+                password: passwordController.text,
+              ),
+            );
+      }
+    }, [formKey, emailController, passwordController]);
+
     return BlocConsumer<AuthBloc, AuthState>(
+      listenWhen: (previous, current) =>
+          current is AuthError && previous is! AuthError,
       listener: (context, state) {
         if (state is AuthError) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -37,17 +50,6 @@ class LoginPage extends HookWidget {
       },
       builder: (context, state) {
         final isLoading = state is AuthLoading;
-
-        Future<void> handleLogin() async {
-          if (formKey.currentState!.validate()) {
-            context.read<AuthBloc>().add(
-                  AuthLogin(
-                    username: emailController.text,
-                    password: passwordController.text,
-                  ),
-                );
-          }
-        }
 
         return Scaffold(
           body: SafeArea(

@@ -7,6 +7,7 @@ import 'package:bpmap_app/presentation/bloc/auth/auth_event.dart';
 import 'package:bpmap_app/presentation/bloc/auth/auth_state.dart';
 import 'package:bpmap_app/shared/data/local/storage_service.dart';
 import 'package:bpmap_app/shared/domain/models/app_config.dart';
+import 'package:bpmap_app/shared/exceptions/http_exception.dart';
 import 'package:bpmap_app/shared/services/device_info_service.dart';
 import 'package:bpmap_app/shared/services/notification_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final DeviceInfoService _deviceInfoService;
   final NotificationService _notificationService;
   final AppConfig _appConfig;
+
+  static const _defaultAuthErrorMessage =
+      'ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่';
+
+  /// Maps exception to user-friendly message for UI.
+  String _userMessage(Object error) {
+    if (error is AppException) {
+      if (error.statusCode == 401) {
+        return 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+      }
+      return error.message.isNotEmpty ? error.message : _defaultAuthErrorMessage;
+    }
+    return _defaultAuthErrorMessage;
+  }
+
+  /// Saves credentials and fetches user me. Returns [UserMeModel] or null.
+  /// Caller must emit [AuthAuthenticated] with the result.
+  Future<UserMeModel?> _saveCredentialsAndLoadUser(AuthCredentials credentials) async {
+    await _storage.setAccessToken(credentials.accessToken);
+    await _storage.setRefreshToken(credentials.refreshToken);
+    final meResult = await _authRepository.getMe();
+    return meResult.fold((_) => null, (me) => me);
+  }
 
   Future<void> _onAuthStarted(
     AuthStarted event,
@@ -86,14 +110,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     await result.fold(
       (error) async {
-        emit(AuthError(error.toString()));
+        emit(AuthError(_userMessage(error)));
       },
       (credentials) async {
-        await _storage.setAccessToken(credentials.accessToken);
-        await _storage.setRefreshToken(credentials.refreshToken);
-        final meResult = await _authRepository.getMe();
-        UserMeModel? userMe;
-        meResult.fold((_) => null, (me) => userMe = me);
+        final userMe = await _saveCredentialsAndLoadUser(credentials);
         emit(AuthAuthenticated(credentials: credentials, userMe: userMe));
       },
     );
@@ -114,12 +134,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         serverClientId: _appConfig.googleServerClientId,
       );
       final GoogleSignIn signIn = GoogleSignIn.instance;
-      final GoogleSignInAccount googleUser = await signIn.authenticate();
-      final googleAuth = googleUser.authentication;
+      final GoogleSignInAccount? googleUser = await signIn.authenticate();
+      if (googleUser == null) {
+        emit(const AuthUnauthenticated());
+        return;
+      }
+      final googleAuth = await googleUser.authentication;
       final idToken = googleAuth.idToken;
 
       if (idToken == null) {
-        emit(const AuthError('Google Sign-In failed: No ID Token'));
+        emit(const AuthError('Google Sign-In ไม่สำเร็จ ไม่พบ ID Token'));
         return;
       }
 
@@ -135,19 +159,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       await result.fold(
         (error) async {
-          emit(AuthError(error.toString()));
+          emit(AuthError(_userMessage(error)));
         },
         (credentials) async {
-          await _storage.setAccessToken(credentials.accessToken);
-          await _storage.setRefreshToken(credentials.refreshToken);
-          final meResult = await _authRepository.getMe();
-          UserMeModel? userMe;
-          meResult.fold((_) => null, (me) => userMe = me);
+          final userMe = await _saveCredentialsAndLoadUser(credentials);
           emit(AuthAuthenticated(credentials: credentials, userMe: userMe));
         },
       );
     } catch (e, _) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(_userMessage(e)));
     }
   }
 
@@ -163,7 +183,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       final idToken = result.accessToken.idTokenRaw;
       if (idToken == null) {
-        emit(const AuthError('Line Sign-In failed: No ID Token'));
+        emit(const AuthError('Line Sign-In ไม่สำเร็จ ไม่พบ ID Token'));
         return;
       }
 
@@ -179,19 +199,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       await authResult.fold(
         (error) async {
-          emit(AuthError(error.toString()));
+          emit(AuthError(_userMessage(error)));
         },
         (credentials) async {
-          await _storage.setAccessToken(credentials.accessToken);
-          await _storage.setRefreshToken(credentials.refreshToken);
-          final meResult = await _authRepository.getMe();
-          UserMeModel? userMe;
-          meResult.fold((_) => null, (me) => userMe = me);
+          final userMe = await _saveCredentialsAndLoadUser(credentials);
           emit(AuthAuthenticated(credentials: credentials, userMe: userMe));
         },
       );
     } catch (e, _) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(_userMessage(e)));
     }
   }
 }

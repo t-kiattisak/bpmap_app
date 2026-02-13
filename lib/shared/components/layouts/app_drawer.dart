@@ -10,8 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppDrawer extends StatelessWidget {
-  final Function()? toogleDrawer;
-  const AppDrawer({super.key, this.toogleDrawer});
+  final VoidCallback? toggleDrawer;
+  const AppDrawer({super.key, this.toggleDrawer});
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +152,7 @@ class AppDrawer extends StatelessWidget {
                           icon: Icons.home,
                           title: 'หน้าหลัก',
                           onTap: () {
-                            toogleDrawer?.call();
+                            toggleDrawer?.call();
                             HomeRoute().go(context);
                           },
                           isActive: currentPath == HomeRoute().location,
@@ -161,7 +161,7 @@ class AppDrawer extends StatelessWidget {
                           icon: FontAwesomeIcons.newspaper,
                           title: 'แมพ',
                           onTap: () {
-                            toogleDrawer?.call();
+                            toggleDrawer?.call();
                             MapRoute().go(context);
                           },
                           isActive: currentPath == MapRoute().location,

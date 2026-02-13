@@ -38,7 +38,8 @@ GoRouter createAppRouter(AuthBloc authBloc, Listenable refreshListenable) {
 
       switch (authState) {
         case AuthError():
-          return const LoginRoute().location;
+          if (!isLoggingIn) return const LoginRoute().location;
+          return null;
         case AuthInitial():
         case AuthLoading():
           if (isLoggingIn) return null;

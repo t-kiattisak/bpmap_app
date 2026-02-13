@@ -62,7 +62,7 @@ class AppShell extends HookWidget {
                   minWidth: 280,
                   maxWidth: 280,
                   alignment: Alignment.centerRight,
-                  child: AppDrawer(toogleDrawer: toggleDrawer),
+                  child: AppDrawer(toggleDrawer: toggleDrawer),
                 ),
               );
             },
