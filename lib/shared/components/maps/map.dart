@@ -1,15 +1,16 @@
+import 'package:bpmap_app/shared/di/di.dart';
+import 'package:bpmap_app/presentation/cubit/loading_cubit.dart';
 import 'package:bpmap_app/shared/components/maps/map_controls.dart';
-import 'package:bpmap_app/shared/domain/providers/loading_provider.dart';
-import 'package:bpmap_app/shared/domain/providers/location_provider.dart';
+import 'package:bpmap_app/shared/services/location_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-class Map extends HookConsumerWidget {
+class Map extends HookWidget {
   final LatLng initialCenter;
   final double initialZoom;
   final List<Marker> markers;
@@ -30,12 +31,12 @@ class Map extends HookConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final MapController controller =
         mapController ?? useMemoized(() => MapController());
     final currentZoom = useState(initialZoom);
 
-    final locationService = ref.read(locationServiceProvider);
+    final locationService = getIt<LocationService>();
 
     final PopupController popController =
         popupController ?? useMemoized(() => PopupController());
@@ -45,7 +46,7 @@ class Map extends HookConsumerWidget {
     }
 
     Future<void> _getCurrentLocation() async {
-      ref.read(loadingServiceProvider.notifier).wrap(() async {
+      context.read<LoadingCubit>().wrap(() async {
         final position = await locationService.getCurrentLocation();
         if (position != null) {
           controller.move(LatLng(position.latitude, position.longitude), 15.0);

@@ -1,21 +1,15 @@
-import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
+import 'package:bpmap_app/presentation/widgets/maps/map_layer_panel.dart';
 import 'package:bpmap_app/shared/components/maps/label_marker.dart';
 import 'package:bpmap_app/shared/components/maps/map.dart';
-import 'package:bpmap_app/presentation/widgets/maps/map_layer_panel.dart';
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-class MapPage extends StatefulHookConsumerWidget {
+class MapPage extends HookWidget {
   const MapPage({super.key});
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MapPageState();
-}
-
-class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
     final layers = useState<List<MapLayer>>([
