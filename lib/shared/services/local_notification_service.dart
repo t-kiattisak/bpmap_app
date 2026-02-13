@@ -1,7 +1,4 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'local_notification_provider.g.dart';
 
 class LocalNotificationService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -57,9 +54,4 @@ class LocalNotificationService {
       payload: payload,
     );
   }
-}
-
-@Riverpod(keepAlive: true)
-LocalNotificationService localNotificationService(Ref ref) {
-  return LocalNotificationService();
 }

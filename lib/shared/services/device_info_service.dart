@@ -2,9 +2,6 @@ import 'dart:io';
 
 import 'package:bpmap_app/domain/entities/device_info.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'device_info_provider.g.dart';
 
 class DeviceInfoService {
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
@@ -25,14 +22,8 @@ class DeviceInfoService {
       }
     } catch (e) {
       // Handle error or fallback
-      // Ideally log the error
     }
 
     return DeviceInfo(deviceId: deviceId, deviceType: deviceType);
   }
-}
-
-@riverpod
-DeviceInfoService deviceInfoService(Ref ref) {
-  return DeviceInfoService();
 }
