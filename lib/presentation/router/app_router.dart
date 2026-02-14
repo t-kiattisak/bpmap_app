@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bpmap_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:bpmap_app/presentation/bloc/auth/auth_state.dart';
 import 'package:bpmap_app/presentation/router/router.dart';
@@ -6,16 +8,30 @@ import 'package:go_router/go_router.dart';
 
 final _routerKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
 
-/// Listenable that notifies when [AuthBloc] state changes, for GoRouter refresh.
+enum _RedirectCategory { splash, authenticated, unauthenticated }
+
 class AuthRefreshListenable extends ChangeNotifier {
   AuthRefreshListenable(this._authBloc) {
-    _subscription = _authBloc.stream.listen((_) {
-      notifyListeners();
+    var prevCategory = _redirectCategory(_authBloc.state);
+    _subscription = _authBloc.stream.listen((state) {
+      final category = _redirectCategory(state);
+      if (category != prevCategory) {
+        prevCategory = category;
+        notifyListeners();
+      }
     });
   }
 
+  static _RedirectCategory _redirectCategory(AuthState state) {
+    return switch (state) {
+      AuthInitial() || AuthLoading() => _RedirectCategory.splash,
+      AuthAuthenticated() => _RedirectCategory.authenticated,
+      AuthUnauthenticated() || AuthError() => _RedirectCategory.unauthenticated,
+    };
+  }
+
   final AuthBloc _authBloc;
-  late final dynamic _subscription;
+  late final StreamSubscription<AuthState> _subscription;
 
   @override
   void dispose() {
@@ -24,13 +40,17 @@ class AuthRefreshListenable extends ChangeNotifier {
   }
 }
 
-GoRouter createAppRouter(AuthBloc authBloc, Listenable refreshListenable) {
+GoRouter createAppRouter(
+  AuthBloc authBloc,
+  Listenable refreshListenable, {
+  bool debugLogDiagnostics = false,
+}) {
   return GoRouter(
     initialLocation: const SplashRoute().location,
     refreshListenable: refreshListenable,
     routes: $appRoutes,
     navigatorKey: _routerKey,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: debugLogDiagnostics,
     redirect: (context, state) {
       final isSplash = state.uri.path == const SplashRoute().location;
       final isLoggingIn = state.uri.path == const LoginRoute().location;

@@ -40,20 +40,25 @@ class LoginRoute extends GoRouteData with $LoginRoute {
 class AppShellRoute extends ShellRouteData {
   const AppShellRoute();
 
+  static List<Widget> _titleForLocation(String routeLocation) {
+    switch (routeLocation) {
+      case '/':
+        return [];
+      case '/map':
+        return [const Expanded(child: MapSearchBar())];
+      default:
+        return [];
+    }
+  }
+
   @override
   Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
-    List<Widget> _getTitle(String routeLocation) {
-      switch (routeLocation) {
-        case '/':
-          return [];
-        case '/map':
-          return [const Expanded(child: MapSearchBar())];
-        default:
-          return [];
-      }
-    }
-
-    return AppShell(child: navigator, title: _getTitle(state.matchedLocation));
+    // Use titleBuilder so only the title subtree rebuilds when route changes
+    // (GoRouterState.of(context) dependency), not the whole shell.
+    return AppShell(
+      child: navigator,
+      titleBuilder: (ctx) => _titleForLocation(GoRouterState.of(ctx).matchedLocation),
+    );
   }
 }
 

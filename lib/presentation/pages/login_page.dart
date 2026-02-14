@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bpmap_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:bpmap_app/presentation/bloc/auth/auth_event.dart';
 import 'package:bpmap_app/presentation/bloc/auth/auth_state.dart';
@@ -72,11 +70,7 @@ class LoginPage extends HookWidget {
                           ),
                           onPressed: () async {
                             if (isLoading) return;
-                            try {
-                              context.read<AuthBloc>().add(const AuthGoogleLogin());
-                            } catch (e) {
-                              log('message :: $e');
-                            }
+                            context.read<AuthBloc>().add(const AuthGoogleLogin());
                           },
                           icon: const FaIcon(FontAwesomeIcons.google, size: 20),
                           label: const Text('With Google'),
@@ -90,11 +84,7 @@ class LoginPage extends HookWidget {
                           ),
                           onPressed: () async {
                             if (isLoading) return;
-                            try {
-                              context.read<AuthBloc>().add(const AuthLineLogin());
-                            } catch (e) {
-                              log('message :: $e');
-                            }
+                            context.read<AuthBloc>().add(const AuthLineLogin());
                           },
                           icon: const FaIcon(FontAwesomeIcons.line, size: 20),
                           label: const Text('With Line'),

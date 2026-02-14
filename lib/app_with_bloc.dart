@@ -48,7 +48,11 @@ class _AppWithBlocState extends State<AppWithBloc> {
 
     _loadingCubit = LoadingCubit();
     _authRefreshListenable = AuthRefreshListenable(_authBloc);
-    _router = createAppRouter(_authBloc, _authRefreshListenable);
+    _router = createAppRouter(
+      _authBloc,
+      _authRefreshListenable,
+      debugLogDiagnostics: _appConfig.environment == Environment.dev,
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _subscribeToNotifications());
   }

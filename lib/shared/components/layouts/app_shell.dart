@@ -8,6 +8,7 @@ class AppShell extends HookWidget {
   final List<Widget>? actions;
   final Color backgroundColor;
   final List<Widget> title;
+  final List<Widget> Function(BuildContext)? titleBuilder;
 
   const AppShell({
     super.key,
@@ -15,6 +16,7 @@ class AppShell extends HookWidget {
     this.backgroundColor = Colors.transparent,
     this.actions,
     this.title = const [],
+    this.titleBuilder,
   });
 
   @override
@@ -121,10 +123,15 @@ class AppShell extends HookWidget {
                               );
                             },
                           ),
-                          title: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: title,
-                          ),
+                          title: titleBuilder != null
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: titleBuilder!(context),
+                                )
+                              : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: title,
+                                ),
                           centerTitle: true,
                           actions: actions,
                         ),
