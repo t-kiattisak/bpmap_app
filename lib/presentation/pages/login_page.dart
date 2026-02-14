@@ -1,105 +1,108 @@
 import 'package:bpmap_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:bpmap_app/presentation/bloc/auth/auth_event.dart';
 import 'package:bpmap_app/presentation/bloc/auth/auth_state.dart';
+import 'package:bpmap_app/presentation/login/cubit/login_cubit.dart';
+import 'package:bpmap_app/presentation/login/cubit/login_state.dart';
+import 'package:bpmap_app/presentation/login/form/email_formz.dart';
+import 'package:bpmap_app/presentation/login/form/password_formz.dart';
 import 'package:bpmap_app/shared/components/button/action_button.dart';
 import 'package:bpmap_app/shared/components/field/app_text_field.dart';
 import 'package:bpmap_app/shared/components/field/password_text_field.dart';
 import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class LoginPage extends HookWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final formKey = useMemoized(() => GlobalKey<FormState>());
-    final emailController = useTextEditingController();
-    final passwordController = useTextEditingController();
-
     final textTheme = Theme.of(context).textTheme;
     final appColors = context.appColors;
 
-    final handleLogin = useCallback(() async {
-      if (formKey.currentState!.validate()) {
-        context.read<AuthBloc>().add(
-              AuthLogin(
-                username: emailController.text,
-                password: passwordController.text,
+    return BlocProvider(
+      create: (_) => LoginCubit(),
+      child: BlocConsumer<AuthBloc, AuthState>(
+        listenWhen: (previous, current) =>
+            current is AuthError && previous is! AuthError,
+        listener: (context, state) {
+          if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: appColors.error,
               ),
             );
-      }
-    }, [formKey, emailController, passwordController]);
+          }
+        },
+        builder: (context, authState) {
+          final isLoading = authState is AuthLoading;
 
-    return BlocConsumer<AuthBloc, AuthState>(
-      listenWhen: (previous, current) =>
-          current is AuthError && previous is! AuthError,
-      listener: (context, state) {
-        if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: appColors.error,
-            ),
-          );
-        }
-      },
-      builder: (context, state) {
-        final isLoading = state is AuthLoading;
-
-        return Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 32.0),
-                    child: Text('เข้าสู่ระบบ', style: textTheme.headlineMedium),
-                  ),
-                  const SizedBox(height: 32),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ActionButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appColors.error,
-                          ),
-                          onPressed: () async {
-                            if (isLoading) return;
-                            context.read<AuthBloc>().add(const AuthGoogleLogin());
-                          },
-                          icon: const FaIcon(FontAwesomeIcons.google, size: 20),
-                          label: const Text('With Google'),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: ActionButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appColors.brandLine,
-                          ),
-                          onPressed: () async {
-                            if (isLoading) return;
-                            context.read<AuthBloc>().add(const AuthLineLogin());
-                          },
-                          icon: const FaIcon(FontAwesomeIcons.line, size: 20),
-                          label: const Text('With Line'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-                  Form(
-                    key: formKey,
+          return BlocBuilder<LoginCubit, LoginState>(
+            builder: (context, loginState) {
+              return Scaffold(
+                body: SafeArea(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 16.0,
+                    ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 32.0),
+                          child: Text(
+                            'เข้าสู่ระบบ',
+                            style: textTheme.headlineMedium,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ActionButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: appColors.error,
+                                ),
+                                onPressed: () async {
+                                  if (isLoading) return;
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(const AuthGoogleLogin());
+                                },
+                                icon: const FaIcon(
+                                  FontAwesomeIcons.google,
+                                  size: 20,
+                                ),
+                                label: const Text('With Google'),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ActionButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: appColors.brandLine,
+                                ),
+                                onPressed: () async {
+                                  if (isLoading) return;
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(const AuthLineLogin());
+                                },
+                                icon: const FaIcon(
+                                  FontAwesomeIcons.line,
+                                  size: 20,
+                                ),
+                                label: const Text('With Line'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
                         AppTextField(
-                          controller: emailController,
+                          value: loginState.email.value,
                           label: 'อีเมล*',
                           keyboardType: TextInputType.emailAddress,
                           enabled: !isLoading,
@@ -108,33 +111,46 @@ class LoginPage extends HookWidget {
                             Icons.check_circle_outline,
                             size: 20,
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'กรุณากรอกอีเมล';
-                            }
-                            return null;
-                          },
+                          errorText: loginState.email.displayError?.message,
+                          onChanged: context.read<LoginCubit>().emailChanged,
                         ),
                         const SizedBox(height: 24),
                         PasswordTextField(
-                          controller: passwordController,
+                          value: loginState.password.value,
                           label: 'รหัสผ่าน *',
                           enabled: !isLoading,
+                          errorText:
+                              loginState.password.displayError?.message,
+                          onChanged:
+                              context.read<LoginCubit>().passwordChanged,
                         ),
                         const SizedBox(height: 60),
                         ActionButton(
-                          onPressed: handleLogin,
+                          onPressed: () async {
+                            if (isLoading) return;
+                            final cubit = context.read<LoginCubit>();
+                            if (!cubit.state.isValid) {
+                              cubit.markAllTouched();
+                              return;
+                            }
+                            context.read<AuthBloc>().add(
+                                  AuthLogin(
+                                    username: cubit.state.email.value,
+                                    password: cubit.state.password.value,
+                                  ),
+                                );
+                          },
                           label: const Text('Log In'),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
