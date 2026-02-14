@@ -22,7 +22,7 @@ class AppWithBloc extends StatefulWidget {
   State<AppWithBloc> createState() => _AppWithBlocState();
 }
 
-class _AppWithBlocState extends State<AppWithBloc> {
+class _AppWithBlocState extends State<AppWithBloc> with WidgetsBindingObserver {
   late final AuthBloc _authBloc;
   late final LoadingCubit _loadingCubit;
   late final AuthRefreshListenable _authRefreshListenable;
@@ -32,6 +32,7 @@ class _AppWithBlocState extends State<AppWithBloc> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     final authRepository = getIt<AuthRepository>();
     final storage = getIt<StorageService>();
     final deviceInfoService = getIt<DeviceInfoService>();

@@ -49,83 +49,107 @@ class LoginPage extends StatelessWidget {
                       vertical: 16.0,
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 32.0),
-                          child: Text(
-                            'เข้าสู่ระบบ',
-                            style: textTheme.headlineMedium,
+                        const SizedBox(height: 24),
+                        Icon(
+                          Icons.shield_outlined,
+                          size: 56,
+                          color: appColors.brandBlue,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'เข้าสู่ระบบ',
+                          textAlign: TextAlign.center,
+                          style: textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 32),
+                        ActionButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: appColors.textPrimary,
+                            side: BorderSide(color: appColors.border),
+                          ),
+                          onPressed: () async {
+                            if (isLoading) return;
+                            context.read<AuthBloc>().add(
+                              const AuthGoogleLogin(),
+                            );
+                          },
+                          icon: const FaIcon(FontAwesomeIcons.google, size: 20),
+                          label: const Text('เข้าสู่ระบบด้วย Google'),
+                        ),
+                        const SizedBox(height: 12),
+                        ActionButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: appColors.brandLine,
+                          ),
+                          onPressed: () async {
+                            if (isLoading) return;
+                            context.read<AuthBloc>().add(const AuthLineLogin());
+                          },
+                          icon: const FaIcon(
+                            FontAwesomeIcons.line,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            'เข้าสู่ระบบด้วย LINE',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
                         Row(
                           children: [
-                            Expanded(
-                              child: ActionButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: appColors.error,
+                            const Expanded(child: Divider()),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              child: Text(
+                                'หรือ',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: appColors.textSecondary,
                                 ),
-                                onPressed: () async {
-                                  if (isLoading) return;
-                                  context
-                                      .read<AuthBloc>()
-                                      .add(const AuthGoogleLogin());
-                                },
-                                icon: const FaIcon(
-                                  FontAwesomeIcons.google,
-                                  size: 20,
-                                ),
-                                label: const Text('With Google'),
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: ActionButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: appColors.brandLine,
-                                ),
-                                onPressed: () async {
-                                  if (isLoading) return;
-                                  context
-                                      .read<AuthBloc>()
-                                      .add(const AuthLineLogin());
-                                },
-                                icon: const FaIcon(
-                                  FontAwesomeIcons.line,
-                                  size: 20,
-                                ),
-                                label: const Text('With Line'),
-                              ),
-                            ),
+                            const Expanded(child: Divider()),
                           ],
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 24),
                         AppTextField(
                           value: loginState.email.value,
-                          label: 'อีเมล*',
                           keyboardType: TextInputType.emailAddress,
                           enabled: !isLoading,
-                          hintText: 'xxxx@xxx.com',
-                          suffixIcon: const Icon(
-                            Icons.check_circle_outline,
+                          hintText: 'เบอร์โทรศัพท์หรืออีเมล',
+                          prefixIcon: Icon(
+                            Icons.person_outline,
                             size: 20,
+                            color: appColors.textSecondary,
                           ),
                           errorText: loginState.email.displayError?.message,
                           onChanged: context.read<LoginCubit>().emailChanged,
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
                         PasswordTextField(
                           value: loginState.password.value,
-                          label: 'รหัสผ่าน *',
                           enabled: !isLoading,
-                          errorText:
-                              loginState.password.displayError?.message,
-                          onChanged:
-                              context.read<LoginCubit>().passwordChanged,
+                          hintText: 'รหัสผ่าน',
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            size: 20,
+                            color: appColors.textSecondary,
+                          ),
+                          errorText: loginState.password.displayError?.message,
+                          onChanged: context.read<LoginCubit>().passwordChanged,
                         ),
-                        const SizedBox(height: 60),
+                        const SizedBox(height: 24),
                         ActionButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: appColors.brandBlue,
+                          ),
                           onPressed: () async {
                             if (isLoading) return;
                             final cubit = context.read<LoginCubit>();
@@ -134,13 +158,13 @@ class LoginPage extends StatelessWidget {
                               return;
                             }
                             context.read<AuthBloc>().add(
-                                  AuthLogin(
-                                    username: cubit.state.email.value,
-                                    password: cubit.state.password.value,
-                                  ),
-                                );
+                              AuthLogin(
+                                username: cubit.state.email.value,
+                                password: cubit.state.password.value,
+                              ),
+                            );
                           },
-                          label: const Text('Log In'),
+                          label: const Text('เข้าสู่ระบบ'),
                         ),
                       ],
                     ),

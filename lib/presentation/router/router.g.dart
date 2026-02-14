@@ -63,7 +63,9 @@ RouteBase get $appShellRoute => ShellRouteData.$route(
   factory: $AppShellRouteExtension._fromState,
   routes: [
     GoRouteData.$route(path: '/', factory: $HomeRoute._fromState),
+    GoRouteData.$route(path: '/report', factory: $ReportRoute._fromState),
     GoRouteData.$route(path: '/map', factory: $MapRoute._fromState),
+    GoRouteData.$route(path: '/profile', factory: $ProfileRoute._fromState),
   ],
 );
 
@@ -91,11 +93,51 @@ mixin $HomeRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $ReportRoute on GoRouteData {
+  static ReportRoute _fromState(GoRouterState state) => const ReportRoute();
+
+  @override
+  String get location => GoRouteData.$location('/report');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $MapRoute on GoRouteData {
   static MapRoute _fromState(GoRouterState state) => const MapRoute();
 
   @override
   String get location => GoRouteData.$location('/map');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ProfileRoute on GoRouteData {
+  static ProfileRoute _fromState(GoRouterState state) => const ProfileRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile');
 
   @override
   void go(BuildContext context) => context.go(location);

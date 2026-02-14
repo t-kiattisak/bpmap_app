@@ -8,7 +8,9 @@ class PasswordTextField extends HookWidget {
     this.controller,
     this.value,
     this.label,
+    this.hintText,
     this.enabled = true,
+    this.prefixIcon,
     this.errorText,
     this.onChanged,
   }) : assert(controller != null || value != null,
@@ -17,7 +19,9 @@ class PasswordTextField extends HookWidget {
   final TextEditingController? controller;
   final String? value;
   final String? label;
+  final String? hintText;
   final bool enabled;
+  final Widget? prefixIcon;
   final String? errorText;
   final void Function(String)? onChanged;
 
@@ -39,7 +43,8 @@ class PasswordTextField extends HookWidget {
       enabled: enabled,
       onChanged: onChanged,
       decoration: InputDecoration(
-        hintText: label ?? 'รหัสผ่าน',
+        hintText: hintText ?? label ?? 'รหัสผ่าน',
+        prefixIcon: prefixIcon,
         errorText: errorText,
         suffixIcon: IconButton(
           icon: Icon(

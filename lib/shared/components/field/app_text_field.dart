@@ -12,6 +12,7 @@ class AppTextField extends HookWidget {
     this.keyboardType,
     this.validator,
     this.enabled = true,
+    this.prefixIcon,
     this.suffixIcon,
     this.errorText,
     this.onChanged,
@@ -25,6 +26,7 @@ class AppTextField extends HookWidget {
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final bool enabled;
+  final Widget? prefixIcon;
   final Widget? suffixIcon;
   final String? errorText;
   final void Function(String)? onChanged;
@@ -47,6 +49,7 @@ class AppTextField extends HookWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
+        prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         errorText: errorText,
       ),

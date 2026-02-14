@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:bpmap_app/app_with_bloc.dart';
 import 'package:bpmap_app/shared/di/injection_container.dart';
 import 'package:bpmap_app/shared/constants/app_constants.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 Future<void> mainCommon(Environment env) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await Alarm.init();
 
   final envFile = _getEnvFile(env);
   await dotenv.load(fileName: envFile);

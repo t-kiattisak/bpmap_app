@@ -12,6 +12,7 @@ import 'package:bpmap_app/shared/data/remote/interceptors/auth_interceptor.dart'
 import 'package:bpmap_app/shared/domain/models/app_config.dart';
 import 'package:bpmap_app/shared/services/device_info_service.dart';
 import 'package:bpmap_app/shared/services/location_service.dart';
+import 'package:bpmap_app/shared/services/alarm_service.dart';
 import 'package:bpmap_app/shared/services/local_notification_service.dart';
 import 'package:bpmap_app/shared/services/notification_service.dart';
 import 'package:dio/dio.dart';
@@ -33,28 +34,30 @@ Future<void> initDependencies(AppConfig appConfig) async {
   getIt.registerLazySingleton<AuthInterceptor>(
     () => AuthInterceptor(getIt<StorageService>()),
   );
-  getIt.registerLazySingleton<Dio>(
-    () {
-      final config = getIt<AppConfig>();
-      final dio = Dio(
-        BaseOptions(
-          baseUrl: config.apiBaseUrl,
-          receiveTimeout: const Duration(milliseconds: AppConstants.receiveTimeout),
-          connectTimeout: const Duration(milliseconds: AppConstants.connectTimeout),
-          sendTimeout: const Duration(milliseconds: AppConstants.sendTimeout),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
+  getIt.registerLazySingleton<Dio>(() {
+    final config = getIt<AppConfig>();
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: config.apiBaseUrl,
+        receiveTimeout: const Duration(
+          milliseconds: AppConstants.receiveTimeout,
         ),
-      );
-      dio.interceptors.addAll([
-        getIt<AuthInterceptor>(),
-        LogInterceptor(request: true, requestBody: true, responseBody: true),
-      ]);
-      return dio;
-    },
-  );
+        connectTimeout: const Duration(
+          milliseconds: AppConstants.connectTimeout,
+        ),
+        sendTimeout: const Duration(milliseconds: AppConstants.sendTimeout),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+    dio.interceptors.addAll([
+      getIt<AuthInterceptor>(),
+      LogInterceptor(request: true, requestBody: true, responseBody: true),
+    ]);
+    return dio;
+  });
   getIt.registerLazySingleton<NetworkService>(
     () => DioNetworkService(getIt<Dio>()),
   );
@@ -69,8 +72,12 @@ Future<void> initDependencies(AppConfig appConfig) async {
   getIt.registerLazySingleton<LocalNotificationService>(
     () => LocalNotificationService(),
   );
+  getIt.registerLazySingleton<AlarmService>(() => AlarmService());
   getIt.registerLazySingleton<NotificationService>(
-    () => NotificationService(getIt<LocalNotificationService>()),
+    () => NotificationService(
+      getIt<LocalNotificationService>(),
+      getIt<AlarmService>(),
+    ),
   );
 
   getIt.registerLazySingleton<DeviceInfoService>(() => DeviceInfoService());

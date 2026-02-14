@@ -4,20 +4,41 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+import 'package:bpmap_app/features/notification/data/models/alarm_notification_data.dart';
 import 'package:bpmap_app/features/notification/domain/entities/notification_permission_status.dart';
+import 'package:bpmap_app/shared/services/alarm_service.dart';
 import 'package:bpmap_app/shared/services/local_notification_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+
   log("Handling a background message: ${message.messageId}");
+  final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+  final payload = message.data.toString();
+  final isAlarm = message.data['type']?.toString() == 'alarm';
+
+  if (isAlarm) {
+    final alarm = AlarmNotificationData.fromMessageData(message.data);
+    final title = message.notification?.title ?? alarm.content ?? 'Alarm';
+    final body =
+        message.notification?.body ?? alarm.signal ?? alarm.content ?? '';
+    final alarmService = AlarmService();
+    await alarmService.triggerAlarmInBackground(
+      id: id,
+      title: title,
+      body: body,
+      payload: payload,
+    );
+  }
 }
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final LocalNotificationService _localNotificationService;
+  final AlarmService _alarmService;
 
-  NotificationService(this._localNotificationService);
+  NotificationService(this._localNotificationService, this._alarmService);
 
   String? _currentToken;
   final _tokenController = StreamController<String?>.broadcast();
@@ -33,8 +54,7 @@ class NotificationService {
       _foregroundMessageController.stream;
   Stream<RemoteMessage> get backgroundOpenedMessages =>
       _backgroundOpenedController.stream;
-  Stream<RemoteMessage> get initialMessages =>
-      _initialMessageController.stream;
+  Stream<RemoteMessage> get initialMessages => _initialMessageController.stream;
 
   String? get currentToken => _currentToken;
 
@@ -109,13 +129,28 @@ class NotificationService {
       log('Got a message whilst in the foreground!');
       log('Message data: ${message.data}');
 
-      if (message.notification != null) {
-        log('Message notification: ${message.notification?.title}');
+      final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      final payload = message.data.toString();
+      final isAlarm = message.data['type']?.toString() == 'alarm';
+
+      if (isAlarm) {
+        final alarm = AlarmNotificationData.fromMessageData(message.data);
+        final title = message.notification?.title ?? alarm.content ?? 'Alarm';
+        final body =
+            message.notification?.body ?? alarm.signal ?? alarm.content ?? '';
+        _alarmService.triggerAlarmInForeground(
+          id: id,
+          title: title,
+          body: body,
+          payload: payload,
+        );
+      } else if (message.notification != null) {
+        log('Message notification: ${message.notification?.toMap()}');
         _localNotificationService.showNotification(
-          id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          id: id,
           title: message.notification?.title ?? '',
           body: message.notification?.body ?? '',
-          payload: message.data.toString(),
+          payload: payload,
         );
       }
 
@@ -124,12 +159,15 @@ class NotificationService {
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       log('A new onMessageOpenedApp event was published!');
+
       _backgroundOpenedController.add(message);
     });
 
     final initialMessage = await _firebaseMessaging.getInitialMessage();
+
     if (initialMessage != null) {
       log('Got a message from terminated state!');
+
       _initialMessageController.add(initialMessage);
     }
   }
@@ -140,11 +178,13 @@ class NotificationService {
 
   Future<void> subscribeToTopic(String topic) async {
     await _firebaseMessaging.subscribeToTopic(topic);
+
     log('Subscribed to topic: $topic');
   }
 
   Future<void> unsubscribeFromTopic(String topic) async {
     await _firebaseMessaging.unsubscribeFromTopic(topic);
+
     log('Unsubscribed from topic: $topic');
   }
 
