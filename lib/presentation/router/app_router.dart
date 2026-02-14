@@ -6,7 +6,7 @@ import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-final _routerKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
+final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNavigatorKey');
 
 enum _RedirectCategory { splash, authenticated, unauthenticated }
 
@@ -49,7 +49,7 @@ GoRouter createAppRouter(
     initialLocation: const SplashRoute().location,
     refreshListenable: refreshListenable,
     routes: $appRoutes,
-    navigatorKey: _routerKey,
+    navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: debugLogDiagnostics,
     redirect: (context, state) {
       final isSplash = state.uri.path == const SplashRoute().location;

@@ -11,6 +11,7 @@ List<RouteBase> get $appRoutes => [
   $loginRoute,
   $appShellRoute,
   $mapClassDataRoute,
+  $incidentGuidelineRoute,
 ];
 
 RouteBase get $splashRoute =>
@@ -164,6 +165,36 @@ mixin $MapClassDataRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/map-class-data');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $incidentGuidelineRoute => GoRouteData.$route(
+  path: '/incident-guideline/:id',
+  factory: $IncidentGuidelineRoute._fromState,
+);
+
+mixin $IncidentGuidelineRoute on GoRouteData {
+  static IncidentGuidelineRoute _fromState(GoRouterState state) =>
+      IncidentGuidelineRoute(id: state.pathParameters['id']!);
+
+  IncidentGuidelineRoute get _self => this as IncidentGuidelineRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/incident-guideline/${Uri.encodeComponent(_self.id)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

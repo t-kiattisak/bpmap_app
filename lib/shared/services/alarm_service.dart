@@ -55,7 +55,11 @@ class AlarmService {
         fadeDuration: const Duration(seconds: 3),
         volumeEnforced: false,
       ),
-      notificationSettings: NotificationSettings(title: title, body: body),
+      notificationSettings: NotificationSettings(
+        title: title,
+        body: body,
+        stopButton: 'ปิดเสียง',
+      ),
       payload: payload,
     );
   }

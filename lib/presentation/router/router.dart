@@ -1,6 +1,7 @@
 import 'package:bpmap_app/features/auth/presentation/pages/login_page.dart';
 import 'package:bpmap_app/features/home/presentation/pages/home_page.dart';
 import 'package:bpmap_app/features/home/presentation/pages/report_issue_page.dart';
+import 'package:bpmap_app/features/incident/presentation/pages/incident_guideline_page.dart';
 import 'package:bpmap_app/features/map/presentation/pages/map_class_data_page.dart';
 import 'package:bpmap_app/features/map/presentation/pages/map_page.dart';
 import 'package:bpmap_app/features/profile/presentation/pages/profile_page.dart';
@@ -94,6 +95,21 @@ class MapClassDataRoute extends GoRouteData with $MapClassDataRoute {
     return SlideRightTransitionPage(
       key: state.pageKey,
       child: const MapClassDataPage(),
+    );
+  }
+}
+
+@TypedGoRoute<IncidentGuidelineRoute>(path: '/incident-guideline/:id')
+class IncidentGuidelineRoute extends GoRouteData with $IncidentGuidelineRoute {
+  const IncidentGuidelineRoute({required this.id});
+
+  final String id;
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return SlideRightTransitionPage(
+      key: state.pageKey,
+      child: IncidentGuidelinePage(id: id),
     );
   }
 }

@@ -79,9 +79,9 @@ Future<void> initDependencies(AppConfig appConfig) async {
       getIt<AlarmService>(),
     ),
   );
+  getIt.registerLazySingleton<LocationService>(() => LocationService());
 
   getIt.registerLazySingleton<DeviceInfoService>(() => DeviceInfoService());
-  getIt.registerLazySingleton<LocationService>(() => LocationService());
 
   getIt.registerLazySingleton<NotificationRemoteDataSource>(
     () => NotificationRemoteDataSourceImpl(getIt<NetworkService>()),

@@ -1,15 +1,22 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:alarm/alarm.dart';
+import 'package:alarm/utils/alarm_set.dart';
 import 'package:bpmap_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:bpmap_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:bpmap_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:bpmap_app/features/auth/presentation/bloc/auth_state.dart';
+import 'package:bpmap_app/features/notification/domain/repositories/notification_repository.dart';
+import 'package:bpmap_app/presentation/cubit/loading_cubit.dart';
+import 'package:bpmap_app/presentation/router/app_router.dart';
+import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:bpmap_app/shared/components/loading/loading_overlay.dart';
+import 'package:bpmap_app/shared/data/local/storage_service.dart';
 import 'package:bpmap_app/shared/di/injection_container.dart';
 import 'package:bpmap_app/shared/domain/models/app_config.dart';
 import 'package:bpmap_app/shared/services/device_info_service.dart';
 import 'package:bpmap_app/shared/services/notification_service.dart';
-import 'package:bpmap_app/features/notification/domain/repositories/notification_repository.dart';
-import 'package:bpmap_app/presentation/cubit/loading_cubit.dart';
-import 'package:bpmap_app/presentation/router/app_router.dart';
-import 'package:bpmap_app/shared/data/local/storage_service.dart';
 import 'package:bpmap_app/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +35,8 @@ class _AppWithBlocState extends State<AppWithBloc> with WidgetsBindingObserver {
   late final AuthRefreshListenable _authRefreshListenable;
   late final GoRouter _router;
   late final AppConfig _appConfig;
+  AlarmSet? _lastRingingAlarms;
+  StreamSubscription<AlarmSet>? _ringingSub;
 
   @override
   void initState() {
@@ -55,9 +64,30 @@ class _AppWithBlocState extends State<AppWithBloc> with WidgetsBindingObserver {
       debugLogDiagnostics: _appConfig.environment == Environment.dev,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _subscribeToNotifications(),
-    );
+    _ringingSub = Alarm.ringing.listen((alarmSet) {
+      _lastRingingAlarms = alarmSet;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _subscribeToNotifications();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) return;
+    if (_authBloc.state is! AuthAuthenticated) return;
+    final alarms = _lastRingingAlarms?.alarms;
+    if (alarms == null || alarms.isEmpty) return;
+    final first = alarms.first;
+    final payload = first.payload;
+    if (payload == null || payload.isEmpty) return;
+    try {
+      final data = jsonDecode(payload) as Map<String, dynamic>;
+      final id = data['alarm_id']?.toString() ?? 'unknown';
+      rootNavigatorKey.currentContext
+          ?.push(IncidentGuidelineRoute(id: id).location);
+    } catch (_) {}
   }
 
   Future<void> _subscribeToNotifications() async {
@@ -74,6 +104,7 @@ class _AppWithBlocState extends State<AppWithBloc> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _ringingSub?.cancel();
     _authRefreshListenable.dispose();
     _router.dispose();
     _authBloc.close();
