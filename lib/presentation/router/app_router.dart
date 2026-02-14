@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bpmap_app/presentation/bloc/auth/auth_bloc.dart';
-import 'package:bpmap_app/presentation/bloc/auth/auth_state.dart';
+import 'package:bpmap_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:bpmap_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

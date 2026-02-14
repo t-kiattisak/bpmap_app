@@ -1,6 +1,6 @@
-import 'package:bpmap_app/presentation/bloc/auth/auth_bloc.dart';
-import 'package:bpmap_app/presentation/bloc/auth/auth_event.dart';
-import 'package:bpmap_app/presentation/bloc/auth/auth_state.dart';
+import 'package:bpmap_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:bpmap_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:bpmap_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:bpmap_app/presentation/cubit/loading_cubit.dart';
 import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:bpmap_app/shared/extensions/theme_extensions.dart';

@@ -1,4 +1,4 @@
-import 'package:bpmap_app/shared/di/di.dart';
+import 'package:bpmap_app/shared/di/injection_container.dart';
 import 'package:bpmap_app/presentation/cubit/loading_cubit.dart';
 import 'package:bpmap_app/shared/components/maps/map_controls.dart';
 import 'package:bpmap_app/shared/services/location_service.dart';

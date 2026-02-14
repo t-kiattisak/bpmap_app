@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import 'package:bpmap_app/domain/entities/notification_permission_status.dart';
+import 'package:bpmap_app/features/notification/domain/entities/notification_permission_status.dart';
 import 'package:bpmap_app/shared/services/local_notification_service.dart';
 
 @pragma('vm:entry-point')

@@ -1,5 +1,5 @@
 import 'package:bpmap_app/app_with_bloc.dart';
-import 'package:bpmap_app/shared/di/di.dart';
+import 'package:bpmap_app/shared/di/injection_container.dart';
 import 'package:bpmap_app/shared/constants/app_constants.dart';
 import 'package:bpmap_app/shared/services/notification_service.dart';
 import 'package:bpmap_app/shared/domain/models/app_config.dart';

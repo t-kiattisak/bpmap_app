@@ -1,15 +1,15 @@
-import 'package:bpmap_app/shared/di/di.dart';
-import 'package:bpmap_app/domain/repositories/auth_repository.dart';
-import 'package:bpmap_app/domain/repositories/notification_repository.dart';
-import 'package:bpmap_app/presentation/bloc/auth/auth_bloc.dart';
-import 'package:bpmap_app/shared/data/local/storage_service.dart';
+import 'package:bpmap_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:bpmap_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:bpmap_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:bpmap_app/shared/components/loading/loading_overlay.dart';
+import 'package:bpmap_app/shared/di/injection_container.dart';
 import 'package:bpmap_app/shared/domain/models/app_config.dart';
 import 'package:bpmap_app/shared/services/device_info_service.dart';
 import 'package:bpmap_app/shared/services/notification_service.dart';
-import 'package:bpmap_app/presentation/bloc/auth/auth_event.dart';
+import 'package:bpmap_app/features/notification/domain/repositories/notification_repository.dart';
 import 'package:bpmap_app/presentation/cubit/loading_cubit.dart';
 import 'package:bpmap_app/presentation/router/app_router.dart';
-import 'package:bpmap_app/shared/components/loading/loading_overlay.dart';
+import 'package:bpmap_app/shared/data/local/storage_service.dart';
 import 'package:bpmap_app/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,7 +54,9 @@ class _AppWithBlocState extends State<AppWithBloc> {
       debugLogDiagnostics: _appConfig.environment == Environment.dev,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => _subscribeToNotifications());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _subscribeToNotifications(),
+    );
   }
 
   Future<void> _subscribeToNotifications() async {
@@ -80,7 +82,6 @@ class _AppWithBlocState extends State<AppWithBloc> {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>.value(value: _authBloc),

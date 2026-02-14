@@ -1,9 +1,9 @@
-import 'package:bpmap_app/presentation/pages/home_page.dart';
-import 'package:bpmap_app/presentation/pages/login_page.dart';
-import 'package:bpmap_app/presentation/pages/map_class_data_page.dart';
-import 'package:bpmap_app/presentation/pages/map_page.dart';
-import 'package:bpmap_app/presentation/pages/splash_page.dart';
-import 'package:bpmap_app/presentation/widgets/maps/map_search_bar.dart';
+import 'package:bpmap_app/features/auth/presentation/pages/login_page.dart';
+import 'package:bpmap_app/features/home/presentation/pages/home_page.dart';
+import 'package:bpmap_app/features/map/presentation/pages/map_class_data_page.dart';
+import 'package:bpmap_app/features/map/presentation/pages/map_page.dart';
+import 'package:bpmap_app/features/map/presentation/widgets/map_search_bar.dart';
+import 'package:bpmap_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:bpmap_app/shared/components/layouts/app_shell.dart';
 import 'package:bpmap_app/shared/utility/page_transitions.dart';
 import 'package:flutter/material.dart';
