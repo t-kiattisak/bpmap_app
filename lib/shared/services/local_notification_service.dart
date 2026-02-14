@@ -1,7 +1,4 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'local_notification_provider.g.dart';
 
 class LocalNotificationService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -35,10 +32,14 @@ class LocalNotificationService {
   }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-          'high_importance_channel', // id
-          'High Importance Notifications', // title
+          'high_importance_channel',
+          'High Importance Notifications',
+          groupKey: 'com.bpmap.disaster.ALERTS',
+          channelDescription:
+              'This channel is used for important notifications.',
           importance: Importance.max,
           priority: Priority.high,
+          ticker: 'ticker',
         );
 
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -53,9 +54,4 @@ class LocalNotificationService {
       payload: payload,
     );
   }
-}
-
-@Riverpod(keepAlive: true)
-LocalNotificationService localNotificationService(Ref ref) {
-  return LocalNotificationService();
 }

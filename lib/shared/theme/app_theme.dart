@@ -1,6 +1,7 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:bpmap_app/shared/theme/app_colors.dart';
+import 'package:bpmap_app/shared/theme/app_color_theme.dart';
 
 class AppTheme {
   const AppTheme._();
@@ -18,6 +19,21 @@ class AppTheme {
         onSurface: AppColors.textPrimary,
         onError: AppColors.white,
       ),
+      extensions: const [
+        AppColorTheme(
+          background: AppColors.backgroundLight,
+          surface: AppColors.surface,
+          textPrimary: AppColors.textPrimary,
+          textSecondary: AppColors.textSecondary,
+          iconPrimary: AppColors.black,
+          border: AppColors.border,
+          brandBlue: AppColors.brandBlue,
+          brandLine: AppColors.brandLine,
+          error: AppColors.error,
+          success: AppColors.success,
+          warning: AppColors.warning,
+        ),
+      ],
       textTheme: GoogleFonts.kanitTextTheme(
         const TextTheme(
           displayLarge: TextStyle(fontSize: 57, fontWeight: FontWeight.bold),
@@ -52,6 +68,8 @@ class AppTheme {
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         centerTitle: false,
         iconTheme: IconThemeData(color: AppColors.black),
         titleTextStyle: TextStyle(

@@ -1,19 +1,13 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'loading_provider.g.dart';
-
-@Riverpod(keepAlive: true)
-class LoadingService extends _$LoadingService {
-  @override
-  bool build() {
-    return false;
-  }
+class LoadingCubit extends Cubit<bool> {
+  LoadingCubit() : super(false);
 
   int _count = 0;
 
   void show() {
     _count++;
-    state = true;
+    emit(true);
   }
 
   void hide() {
@@ -21,7 +15,7 @@ class LoadingService extends _$LoadingService {
       _count--;
     }
     if (_count == 0) {
-      state = false;
+      emit(false);
     }
   }
 

@@ -1,20 +1,15 @@
+import 'package:bpmap_app/presentation/widgets/maps/map_layer_panel.dart';
 import 'package:bpmap_app/shared/components/maps/label_marker.dart';
 import 'package:bpmap_app/shared/components/maps/map.dart';
-import 'package:bpmap_app/presentation/widgets/maps/map_layer_panel.dart';
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-class MapPage extends StatefulHookConsumerWidget {
+class MapPage extends HookWidget {
   const MapPage({super.key});
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MapPageState();
-}
-
-class _MapPageState extends ConsumerState<MapPage> {
   @override
   Widget build(BuildContext context) {
     final layers = useState<List<MapLayer>>([
@@ -41,10 +36,12 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
     ]);
 
+    final appColors = context.appColors;
+
     final markersData = [
       (
         point: const LatLng(13.7563, 100.5018),
-        color: Colors.blue,
+        color: appColors.brandBlue,
         data: {
           'score': '23',
           'title': 'ระดับความล่อแหลม (ก่อน/หลัง)',
@@ -57,7 +54,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       (
         point: const LatLng(13.7663, 100.5118),
-        color: Colors.red,
+        color: appColors.error,
         data: {
           'score': '30',
           'title': 'ระดับความล่อแหลม (ก่อน/หลัง)',
@@ -70,7 +67,7 @@ class _MapPageState extends ConsumerState<MapPage> {
       ),
       (
         point: const LatLng(13.7463, 100.4918),
-        color: Colors.green,
+        color: appColors.success,
         data: {
           'score': '10',
           'title': 'ระดับความล่อแหลม (ก่อน/หลัง)',
@@ -121,10 +118,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                 children: [
                   Text(
                     info['title'] as String,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
-                      color: Color(0xFF2C3E50),
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -133,9 +130,9 @@ class _MapPageState extends ConsumerState<MapPage> {
                       padding: const EdgeInsets.only(bottom: 4.0),
                       child: Text(
                         item,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: Color(0xFF34495E),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ),
@@ -148,24 +145,28 @@ class _MapPageState extends ConsumerState<MapPage> {
       },
     );
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          map,
-          Positioned(
-            top: 60,
-            left: 16,
-            child: MapLayerPanel(
-              layers: layers.value,
-              onDelete: (layer) {
-                final newLayers = List<MapLayer>.from(layers.value);
-                newLayers.remove(layer);
-                layers.value = newLayers;
-              },
-            ),
+    return Stack(
+      children: [
+        map,
+        SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: MapLayerPanel(
+                  layers: layers.value,
+                  onDelete: (layer) {
+                    final newLayers = List<MapLayer>.from(layers.value);
+                    newLayers.remove(layer);
+                    layers.value = newLayers;
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

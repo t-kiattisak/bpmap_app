@@ -11,4 +11,8 @@ class AppColors {
   static const Color textSecondary = Colors.grey;
   static const Color border = Color(0xFFE0E0E0);
   static const Color error = Colors.red;
+  static const Color success = Colors.green;
+  static const Color warning = Colors.orange;
+  static const Color brandLine = Color(0xFF00B900);
+  static const Color surface = Color(0xFFF5F5F5);
 }

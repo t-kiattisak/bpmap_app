@@ -1,3 +1,4 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class MapSearchPage extends StatefulWidget {
@@ -18,6 +19,8 @@ class _MapSearchPageState extends State<MapSearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = context.appColors;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -41,15 +44,15 @@ class _MapSearchPageState extends State<MapSearchPage> {
             ),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
+            Icon(Icons.search, size: 64, color: appColors.textSecondary),
+            const SizedBox(height: 16),
             Text(
               'พิมพ์เพื่อค้นหา',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: TextStyle(color: appColors.textSecondary, fontSize: 16),
             ),
           ],
         ),

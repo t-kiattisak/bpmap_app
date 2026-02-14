@@ -1,17 +1,22 @@
+import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:bpmap_app/shared/components/layouts/app_drawer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class MainLayout extends HookWidget {
+class AppShell extends HookWidget {
   final Widget child;
-  final List<Widget> title;
   final List<Widget>? actions;
+  final Color backgroundColor;
+  final List<Widget> title;
+  final List<Widget> Function(BuildContext)? titleBuilder;
 
-  const MainLayout({
+  const AppShell({
     super.key,
     required this.child,
-    this.title = const [],
+    this.backgroundColor = Colors.transparent,
     this.actions,
+    this.title = const [],
+    this.titleBuilder,
   });
 
   @override
@@ -44,7 +49,7 @@ class MainLayout extends HookWidget {
     }
 
     return Material(
-      color: const Color(0xFFF5F5F5),
+      color: context.appColors.surface,
       child: Stack(
         children: [
           AnimatedBuilder(
@@ -55,11 +60,11 @@ class MainLayout extends HookWidget {
                 bottom: 0,
                 left: 0,
                 width: slideAnimation.value,
-                child: const OverflowBox(
+                child: OverflowBox(
                   minWidth: 280,
                   maxWidth: 280,
                   alignment: Alignment.centerRight,
-                  child: AppDrawer(),
+                  child: AppDrawer(toggleDrawer: toggleDrawer),
                 ),
               );
             },
@@ -68,6 +73,7 @@ class MainLayout extends HookWidget {
           AnimatedBuilder(
             animation: animationController,
             builder: (context, _) {
+              final appColors = context.appColors;
               return Transform(
                 alignment: Alignment.centerLeft,
                 transform: Matrix4.identity()
@@ -84,7 +90,7 @@ class MainLayout extends HookWidget {
                     children: [
                       Scaffold(
                         extendBodyBehindAppBar: true,
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: backgroundColor,
                         appBar: AppBar(
                           backgroundColor: Colors.transparent,
                           elevation: 0,
@@ -94,11 +100,11 @@ class MainLayout extends HookWidget {
                                 icon: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: appColors.surface,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(
+                                        color: appColors.textPrimary.withValues(
                                           alpha: 0.1,
                                         ),
                                         blurRadius: 4,
@@ -110,17 +116,22 @@ class MainLayout extends HookWidget {
                                     isDrawerOpen.value
                                         ? Icons.close
                                         : Icons.list,
-                                    color: Colors.black87,
+                                    color: appColors.iconPrimary,
                                   ),
                                 ),
                                 onPressed: toggleDrawer,
                               );
                             },
                           ),
-                          title: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: title,
-                          ),
+                          title: titleBuilder != null
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: titleBuilder!(context),
+                                )
+                              : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: title,
+                                ),
                           centerTitle: true,
                           actions: actions,
                         ),
