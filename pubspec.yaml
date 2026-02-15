@@ -38,7 +38,6 @@ dependencies:
   flutter_hooks: ^0.21.3+1
   dio: ^5.9.0
   flutter_dotenv: ^6.0.0
-  build_runner: ^2.10.4
   equatable: ^2.0.7
   json_annotation: ^4.9.0
   flutter_secure_storage: ^10.0.0
@@ -64,6 +63,9 @@ dependencies:
   flutter_riverpod: ^3.0.3
   hooks_riverpod: ^3.0.3
   riverpod_annotation: ^3.0.3
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_background_geolocation: ^5.0.4
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +81,7 @@ dev_dependencies:
   json_serializable: ^6.8.0
   freezed: ^3.2.3
   riverpod_generator: ^3.0.3
+  build_runner: ^2.10.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -57,7 +57,7 @@ class Auth extends _$Auth {
     state = const AsyncLoading();
     final authRepository = ref.read(authRepositoryProvider);
     final deviceInfoService = ref.read(deviceInfoServiceProvider);
-    final gateway = ref.read(fcmGatewayProvider);
+    final gateway = ref.read(notificationServiceProvider);
 
     final deviceInfo = await deviceInfoService.getDeviceInfo();
     final fcmToken = await gateway.getToken() ?? '';
@@ -71,7 +71,7 @@ class Auth extends _$Auth {
     );
 
     state = await result.fold(
-      (error) => AsyncError(AuthError(_userMessage(error)), StackTrace.current),
+      (error) => AsyncData(AuthError(_userMessage(error))),
       (credentials) async {
         final userMe = await _saveCredentialsAndLoadUser(credentials);
         return AsyncData(
@@ -96,16 +96,15 @@ class Auth extends _$Auth {
       final googleUser = await GoogleSignIn.instance.authenticate();
       final idToken = googleUser.authentication.idToken;
       if (idToken == null || idToken.isEmpty) {
-        state = AsyncError(
-          const AuthError('Google Sign-In ไม่สำเร็จ ไม่พบ ID Token'),
-          StackTrace.current,
+        state = const AsyncData(
+          AuthError('Google Sign-In ไม่สำเร็จ ไม่พบ ID Token'),
         );
         return;
       }
 
       final authRepository = ref.read(authRepositoryProvider);
       final deviceInfoService = ref.read(deviceInfoServiceProvider);
-      final gateway = ref.read(fcmGatewayProvider);
+      final gateway = ref.read(notificationServiceProvider);
       final deviceInfo = await deviceInfoService.getDeviceInfo();
       final fcmToken = await gateway.getToken() ?? '';
 
@@ -117,8 +116,7 @@ class Auth extends _$Auth {
       );
 
       state = await result.fold(
-        (error) =>
-            AsyncError(AuthError(_userMessage(error)), StackTrace.current),
+        (error) => AsyncData(AuthError(_userMessage(error))),
         (credentials) async {
           final userMe = await _saveCredentialsAndLoadUser(credentials);
           return AsyncData(
@@ -127,7 +125,8 @@ class Auth extends _$Auth {
         },
       );
     } catch (e, st) {
-      state = AsyncError(AuthError(_userMessage(e)), st);
+      log('Google Login Error', error: e, stackTrace: st);
+      state = AsyncData(AuthError(_userMessage(e)));
     }
   }
 
@@ -141,16 +140,15 @@ class Auth extends _$Auth {
       );
       final idToken = result.accessToken.idTokenRaw;
       if (idToken == null || idToken.isEmpty) {
-        state = AsyncError(
-          const AuthError('Line Sign-In ไม่สำเร็จ ไม่พบ ID Token'),
-          StackTrace.current,
+        state = const AsyncData(
+          AuthError('Line Sign-In ไม่สำเร็จ ไม่พบ ID Token'),
         );
         return;
       }
 
       final authRepository = ref.read(authRepositoryProvider);
       final deviceInfoService = ref.read(deviceInfoServiceProvider);
-      final gateway = ref.read(fcmGatewayProvider);
+      final gateway = ref.read(notificationServiceProvider);
       final deviceInfo = await deviceInfoService.getDeviceInfo();
       final fcmToken = await gateway.getToken() ?? '';
 
@@ -162,8 +160,7 @@ class Auth extends _$Auth {
       );
 
       state = await authResult.fold(
-        (error) =>
-            AsyncError(AuthError(_userMessage(error)), StackTrace.current),
+        (error) => AsyncData(AuthError(_userMessage(error))),
         (credentials) async {
           final userMe = await _saveCredentialsAndLoadUser(credentials);
           return AsyncData(
@@ -172,7 +169,8 @@ class Auth extends _$Auth {
         },
       );
     } catch (e, st) {
-      state = AsyncError(AuthError(_userMessage(e)), st);
+      log('Line Login Error', error: e, stackTrace: st);
+      state = AsyncData(AuthError(_userMessage(e)));
     }
   }
 

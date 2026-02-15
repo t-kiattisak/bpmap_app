@@ -5,6 +5,7 @@ import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:bpmap_app/shared/domain/models/app_config.dart';
 import 'package:bpmap_app/shared/providers/di_providers.dart';
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,6 +23,7 @@ GoRouter router(Ref ref) {
   });
 
   final appConfig = ref.watch(appConfigProvider);
+
   final router = GoRouter(
     initialLocation: const SplashRoute().location,
     refreshListenable: authNotifier,
@@ -48,7 +50,9 @@ GoRouter router(Ref ref) {
           case AuthLoading():
             return null;
           case AuthAuthenticated():
-            return (isSplash || isLoggingIn) ? const HomeRoute().location : null;
+            return (isSplash || isLoggingIn)
+                ? const HomeRoute().location
+                : null;
           case AuthUnauthenticated():
             return isLoggingIn ? null : const LoginRoute().location;
         }

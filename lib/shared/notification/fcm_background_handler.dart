@@ -5,6 +5,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:bpmap_app/features/notification/domain/use_cases/handle_alarm_notification_use_case.dart';
 import 'package:bpmap_app/shared/services/alarm_service.dart';
+import 'package:bpmap_app/shared/services/background_location_service.dart';
+import 'package:bpmap_app/shared/data/local/hive_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -14,7 +16,14 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final type = message.data['type']?.toString();
 
   if (type == 'alarm') {
-    final useCase = HandleAlarmNotificationUseCase(AlarmService());
+    final hiveService = HiveService();
+    await hiveService.init();
+    final backgroundLocationService = BackgroundLocationService(hiveService);
+
+    final useCase = HandleAlarmNotificationUseCase(
+      AlarmService(),
+      backgroundLocationService,
+    );
     await useCase.executeInBackground(message);
   }
 }

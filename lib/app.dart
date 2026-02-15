@@ -1,15 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:alarm/alarm.dart';
-import 'package:alarm/utils/alarm_set.dart';
-import 'package:bpmap_app/features/auth/presentation/state/auth_state.dart';
-import 'package:bpmap_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:bpmap_app/presentation/providers/loading_provider.dart';
 import 'package:bpmap_app/presentation/providers/router_provider.dart';
-import 'package:bpmap_app/presentation/router/app_router.dart';
-import 'package:bpmap_app/presentation/router/router.dart';
+
 import 'package:bpmap_app/shared/components/loading/loading_overlay.dart';
+import 'package:bpmap_app/shared/components/alarm/alarm_floating_action_button.dart';
 import 'package:bpmap_app/shared/providers/di_providers.dart';
 import 'package:bpmap_app/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -48,56 +43,24 @@ class _AppScaffold extends ConsumerStatefulWidget {
   ConsumerState<_AppScaffold> createState() => _AppScaffoldState();
 }
 
-class _AppScaffoldState extends ConsumerState<_AppScaffold>
-    with WidgetsBindingObserver {
-  AlarmSet? _lastRingingAlarms;
-  StreamSubscription<AlarmSet>? _ringingSub;
-
+class _AppScaffoldState extends ConsumerState<_AppScaffold> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _ringingSub = Alarm.ringing.listen((alarmSet) {
-      _lastRingingAlarms = alarmSet;
-    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeNotifications();
+      _initializeLocationService();
     });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) return;
-    final authValue = ref.read(authProvider);
-    if (authValue is! AsyncData || authValue.value is! AuthAuthenticated) return;
-    final alarms = _lastRingingAlarms?.alarms;
-    if (alarms == null || alarms.isEmpty) return;
-    final first = alarms.first;
-    final payload = first.payload;
-    if (payload == null || payload.isEmpty) return;
-    try {
-      final data = jsonDecode(payload) as Map<String, dynamic>;
-      final id = data['alarm_id']?.toString() ?? 'unknown';
-      rootNavigatorKey.currentContext
-          ?.push(IncidentGuidelineRoute(id: id).location);
-    } catch (_) {}
   }
 
   Future<void> _initializeNotifications() async {
     try {
-      final gateway = ref.read(fcmGatewayProvider);
-      final handleAlarm = ref.read(handleAlarmNotificationUseCaseProvider);
-      final handleDefault = ref.read(handleDefaultNotificationUseCaseProvider);
+      final notificationService = ref.read(notificationServiceProvider);
+      await notificationService.initialize();
+      debugPrint('Notification service initialized');
 
-      gateway.registerHandler('alarm', (msg, {openedFromNotification = false}) =>
-          handleAlarm.execute(msg, openedFromNotification: openedFromNotification));
-      gateway.registerHandler('default', (msg, {openedFromNotification = false}) =>
-          handleDefault.execute(msg, openedFromNotification: openedFromNotification));
-
-      await gateway.initialize();
-      debugPrint('FCM gateway initialized');
       final notificationRepository = ref.read(notificationRepositoryProvider);
-      final token = await gateway.getToken();
+      final token = await notificationService.getToken();
       if (token != null && token.isNotEmpty) {
         await notificationRepository.subscribe(tokens: [token]);
       }
@@ -107,11 +70,15 @@ class _AppScaffoldState extends ConsumerState<_AppScaffold>
     }
   }
 
-  @override
-  void dispose() {
-    _ringingSub?.cancel();
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
+  Future<void> _initializeLocationService() async {
+    try {
+      final locationService = ref.read(backgroundLocationServiceProvider);
+      await locationService.initialize();
+      await locationService.start();
+      debugPrint('BackgroundLocationService initialized and started');
+    } catch (e) {
+      debugPrint('BackgroundLocationService init failed: $e');
+    }
   }
 
   @override
@@ -127,7 +94,9 @@ class _AppScaffoldState extends ConsumerState<_AppScaffold>
       ),
       routerConfig: widget.router,
       builder: (context, child) {
-        return LoadingOverlay(isLoading: widget.isLoading, child: child!);
+        return AlarmFloatingActionButton(
+          child: LoadingOverlay(isLoading: widget.isLoading, child: child!),
+        );
       },
     );
   }

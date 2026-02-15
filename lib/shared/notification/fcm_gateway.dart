@@ -5,26 +5,27 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:bpmap_app/features/notification/domain/entities/notification_permission_status.dart';
 import 'package:bpmap_app/shared/notification/fcm_background_handler.dart';
-import 'package:bpmap_app/shared/notification/notification_message_callback.dart';
 import 'package:bpmap_app/shared/services/local_notification_service.dart';
+import 'package:bpmap_app/features/notification/domain/use_cases/handle_alarm_notification_use_case.dart';
+import 'package:bpmap_app/features/notification/domain/use_cases/handle_default_notification_use_case.dart';
 
-class FcmGateway {
-  FcmGateway(this._localNotificationService);
+class NotificationService {
+  NotificationService(
+    this._localNotificationService,
+    this._handleAlarmNotificationUseCase,
+    this._handleDefaultNotificationUseCase,
+  );
 
   final LocalNotificationService _localNotificationService;
+  final HandleAlarmNotificationUseCase _handleAlarmNotificationUseCase;
+  final HandleDefaultNotificationUseCase _handleDefaultNotificationUseCase;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
-  final Map<String, NotificationMessageCallback> _handlers = {};
   String? _currentToken;
   final _tokenController = StreamController<String?>.broadcast();
 
   Stream<String?> get tokenStream => _tokenController.stream;
   String? get currentToken => _currentToken;
-
-  /// ลงทะเบียน callback สำหรับ type ที่กำหนด (เช่น 'alarm', 'default')
-  void registerHandler(String type, NotificationMessageCallback callback) {
-    _handlers[type] = callback;
-  }
 
   Future<void> initialize() async {
     await _localNotificationService.initialize();
@@ -109,11 +110,22 @@ class FcmGateway {
     }
   }
 
-  Future<void> _dispatch(RemoteMessage message, {bool openedFromNotification = false}) async {
+  Future<void> _dispatch(
+    RemoteMessage message, {
+    bool openedFromNotification = false,
+  }) async {
     final type = message.data['type']?.toString() ?? 'default';
-    final callback = _handlers[type] ?? _handlers['default'];
-    if (callback != null) {
-      await callback(message, openedFromNotification: openedFromNotification);
+
+    if (type == 'alarm') {
+      await _handleAlarmNotificationUseCase.execute(
+        message,
+        openedFromNotification: openedFromNotification,
+      );
+    } else {
+      await _handleDefaultNotificationUseCase.execute(
+        message,
+        openedFromNotification: openedFromNotification,
+      );
     }
   }
 
