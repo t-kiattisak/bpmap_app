@@ -73,19 +73,6 @@ class AppShell extends StatelessWidget {
     _menuItems[index].go(context);
   }
 
-  static List<Widget>? _actionsForLocation(String location) {
-    final showNotification =
-        location == _menuItems[0].location ||
-        location == _menuItems[1].location;
-    if (!showNotification) return null;
-    return [
-      IconButton(
-        icon: const Icon(Icons.notifications_outlined),
-        onPressed: () {},
-      ),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).matchedLocation;

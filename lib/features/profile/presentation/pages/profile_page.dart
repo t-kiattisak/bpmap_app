@@ -1,14 +1,13 @@
-import 'package:bpmap_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:bpmap_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:bpmap_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final appColors = context.appColors;
 
     return Center(
@@ -23,7 +22,7 @@ class ProfilePage extends StatelessWidget {
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {
-                  context.read<AuthBloc>().add(const AuthLogout());
+                  ref.read(authProvider.notifier).logout();
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: appColors.error,

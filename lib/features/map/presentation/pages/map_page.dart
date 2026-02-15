@@ -1,17 +1,20 @@
 import 'package:bpmap_app/features/map/presentation/widgets/map_layer_panel.dart';
+import 'package:bpmap_app/presentation/providers/loading_provider.dart';
 import 'package:bpmap_app/shared/components/maps/label_marker.dart';
 import 'package:bpmap_app/shared/components/maps/map.dart';
 import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
+import 'package:bpmap_app/shared/providers/di_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-class MapPage extends HookWidget {
+class MapPage extends HookConsumerWidget {
   const MapPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final layers = useState<List<MapLayer>>([
       const MapLayer(id: '1', name: 'ภาพดาวเทียมไทยโชต (THEOS)'),
       const MapLayer(
@@ -96,6 +99,8 @@ class MapPage extends HookWidget {
       initialZoom: 13.0,
       markers: markers,
       polygons: const [],
+      wrapLoading: ref.read(loadingProvider.notifier).wrap,
+      locationService: ref.read(locationServiceProvider),
       popupBuilder: (context, marker) {
         final data = markersData.firstWhere(
           (element) => element.point == marker.point,

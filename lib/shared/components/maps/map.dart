@@ -1,9 +1,6 @@
-import 'package:bpmap_app/shared/di/injection_container.dart';
-import 'package:bpmap_app/presentation/cubit/loading_cubit.dart';
 import 'package:bpmap_app/shared/components/maps/map_controls.dart';
 import 'package:bpmap_app/shared/services/location_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
@@ -18,6 +15,9 @@ class Map extends HookWidget {
   final MapController? mapController;
   final PopupController? popupController;
   final Widget Function(BuildContext, Marker)? popupBuilder;
+  /// If provided, used to wrap async work (e.g. loading overlay). From [loadingProvider.notifier].wrap.
+  final Future<T> Function<T>(Future<T> Function())? wrapLoading;
+  final LocationService locationService;
 
   const Map({
     super.key,
@@ -28,6 +28,8 @@ class Map extends HookWidget {
     this.mapController,
     this.popupController,
     this.popupBuilder,
+    this.wrapLoading,
+    required this.locationService,
   });
 
   @override
@@ -36,7 +38,7 @@ class Map extends HookWidget {
         mapController ?? useMemoized(() => MapController());
     final currentZoom = useState(initialZoom);
 
-    final locationService = getIt<LocationService>();
+    final locationService = this.locationService;
 
     final PopupController popController =
         popupController ?? useMemoized(() => PopupController());
@@ -46,7 +48,8 @@ class Map extends HookWidget {
     }
 
     Future<void> _getCurrentLocation() async {
-      context.read<LoadingCubit>().wrap(() async {
+      final run = wrapLoading ?? (f) => f();
+      await run(() async {
         final position = await locationService.getCurrentLocation();
         if (position != null) {
           controller.move(LatLng(position.latitude, position.longitude), 15.0);

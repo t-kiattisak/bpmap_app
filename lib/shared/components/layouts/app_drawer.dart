@@ -1,29 +1,27 @@
-import 'package:bpmap_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:bpmap_app/features/auth/presentation/bloc/auth_event.dart';
-import 'package:bpmap_app/features/auth/presentation/bloc/auth_state.dart';
-import 'package:bpmap_app/presentation/cubit/loading_cubit.dart';
+import 'package:bpmap_app/features/auth/presentation/state/auth_state.dart';
+import 'package:bpmap_app/features/auth/presentation/providers/auth_provider.dart';
+import 'package:bpmap_app/presentation/providers/loading_provider.dart';
 import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends ConsumerWidget {
   final VoidCallback? toggleDrawer;
   const AppDrawer({super.key, this.toggleDrawer});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final currentPath = GoRouterState.of(context).uri.toString();
     final appColors = context.appColors;
+    final authAsync = ref.watch(authProvider);
+    final authState = authAsync is AsyncData<AuthState> ? authAsync.value : null;
+    final isLoggedIn = authState is AuthAuthenticated;
 
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, authState) {
-        final isLoggedIn = authState is AuthAuthenticated;
-
-        Widget header;
-        if (authState is AuthLoading) {
+    Widget header;
+    if (authAsync.isLoading) {
           header = const Center(child: CircularProgressIndicator());
         } else if (authState is AuthAuthenticated && authState.userMe != null) {
           final user = authState.userMe!.data;
@@ -59,7 +57,7 @@ class AppDrawer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${user?.displayName ?? ''}',
+                        user?.displayName ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -218,8 +216,8 @@ class AppDrawer extends StatelessWidget {
                       icon: Icons.logout,
                       title: 'ออกจากระบบ',
                       onTap: () {
-                        context.read<LoadingCubit>().wrap(() async {
-                          context.read<AuthBloc>().add(const AuthLogout());
+                        ref.read(loadingProvider.notifier).wrap(() async {
+                          ref.read(authProvider.notifier).logout();
                         });
                       },
                     ),
@@ -228,8 +226,6 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
         );
-      },
-    );
   }
 }
 
