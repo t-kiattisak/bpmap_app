@@ -97,7 +97,9 @@ LocalNotificationService localNotificationService(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
-AlarmService alarmService(Ref ref) => AlarmService();
+AlarmService alarmService(Ref ref) {
+  return AlarmService(ref.watch(localNotificationServiceProvider));
+}
 
 @Riverpod(keepAlive: true)
 NotificationService notificationService(Ref ref) {

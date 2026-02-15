@@ -1,5 +1,3 @@
-import 'package:alarm/alarm.dart';
-import 'package:alarm/utils/alarm_set.dart';
 import 'package:flutter/material.dart';
 
 class IncidentGuidelinePage extends StatelessWidget {
@@ -11,24 +9,6 @@ class IncidentGuidelinePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('แนวทางปฏิบัติ')),
-      floatingActionButton: StreamBuilder<AlarmSet>(
-        stream: Alarm.ringing,
-        builder: (context, snapshot) {
-          final isRinging = snapshot.data?.alarms.isNotEmpty ?? false;
-          if (!isRinging) return SizedBox();
-          return FloatingActionButton(
-            onPressed: () async {
-              final data = snapshot.data;
-              if (data != null) {
-                for (final a in data.alarms) {
-                  await Alarm.stop(a.id);
-                }
-              }
-            },
-            child: Icon(Icons.alarm_off),
-          );
-        },
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),

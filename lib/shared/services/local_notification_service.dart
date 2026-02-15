@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:bpmap_app/presentation/router/app_router.dart';
+import 'package:bpmap_app/presentation/router/router.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotificationService {
@@ -24,24 +29,48 @@ class LocalNotificationService {
           iOS: initializationSettingsDarwin,
         );
 
-    await _notificationsPlugin.initialize(initializationSettings);
+    await _notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _onNotificationTapped,
+    );
     await _createAlarmChannel();
   }
 
   Future<void> _createAlarmChannel() async {
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    final AndroidNotificationChannel channel = AndroidNotificationChannel(
       _alarmChannelId,
       _alarmChannelName,
       description: 'Critical disaster alarm notifications.',
       importance: Importance.max,
       playSound: true,
+      sound: const RawResourceAndroidNotificationSound(
+        'footdino_on_scratch_alarm',
+      ),
       enableVibration: true,
       showBadge: true,
     );
     await _notificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(channel);
+  }
+
+  void _onNotificationTapped(NotificationResponse response) {
+    final payload = response.payload;
+    if (payload == null || payload.isEmpty) return;
+
+    try {
+      final data = jsonDecode(payload) as Map<String, dynamic>;
+      final alarmId = data['alarm_id']?.toString() ?? 'unknown';
+
+      final context = rootNavigatorKey.currentContext;
+      if (context != null) {
+        IncidentGuidelineRoute(id: alarmId).push(context);
+      }
+    } catch (e) {
+      debugPrint('Error parsing notification payload: $e');
+    }
   }
 
   Future<void> showNotification({
@@ -75,7 +104,6 @@ class LocalNotificationService {
     );
   }
 
-  /// แสดงการแจ้งเตือนแบบ alarm (ใช้ channel ความสำคัญสูง)
   Future<void> showAlarmNotification({
     required int id,
     required String title,
@@ -84,25 +112,23 @@ class LocalNotificationService {
   }) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
-      _alarmChannelId,
-      _alarmChannelName,
-      channelDescription: 'Critical disaster alarm notifications.',
-      importance: Importance.max,
-      priority: Priority.max,
-      groupKey: 'com.bpmap.disaster.ALERTS',
-      ticker: 'alarm',
-    );
+          _alarmChannelId,
+          _alarmChannelName,
+          channelDescription: 'Critical disaster alarm notifications.',
+          importance: Importance.max,
+          priority: Priority.max,
+          sound: RawResourceAndroidNotificationSound(
+            'footdino_on_scratch_alarm',
+          ),
+          playSound: true,
+          groupKey: 'com.bpmap.disaster.ALERTS',
+          ticker: 'alarm',
+        );
 
     const NotificationDetails details = NotificationDetails(
       android: androidDetails,
     );
 
-    await _notificationsPlugin.show(
-      id,
-      title,
-      body,
-      details,
-      payload: payload,
-    );
+    await _notificationsPlugin.show(id, title, body, details, payload: payload);
   }
 }

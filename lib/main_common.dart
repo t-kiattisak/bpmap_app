@@ -1,4 +1,3 @@
-import 'package:alarm/alarm.dart';
 import 'package:bpmap_app/app.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:bpmap_app/shared/constants/app_constants.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 Future<void> mainCommon(Environment env) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await Alarm.init();
   await Hive.initFlutter();
 
   final envFile = _getEnvFile(env);

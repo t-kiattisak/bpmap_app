@@ -4,7 +4,6 @@ import 'package:bpmap_app/presentation/providers/loading_provider.dart';
 import 'package:bpmap_app/presentation/providers/router_provider.dart';
 
 import 'package:bpmap_app/shared/components/loading/loading_overlay.dart';
-import 'package:bpmap_app/shared/components/alarm/alarm_floating_action_button.dart';
 import 'package:bpmap_app/shared/providers/di_providers.dart';
 import 'package:bpmap_app/shared/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -94,9 +93,7 @@ class _AppScaffoldState extends ConsumerState<_AppScaffold> {
       ),
       routerConfig: widget.router,
       builder: (context, child) {
-        return AlarmFloatingActionButton(
-          child: LoadingOverlay(isLoading: widget.isLoading, child: child!),
-        );
+        return LoadingOverlay(isLoading: widget.isLoading, child: child!);
       },
     );
   }
