@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Legacy root widget; the app uses [AppWithBloc] from main_common.
+/// Legacy root widget; the app uses [MyApp] from main_common (Riverpod).
 /// Kept for tests that import package:bpmap_app/main.dart.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

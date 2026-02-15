@@ -5,25 +5,47 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 class PasswordTextField extends HookWidget {
   const PasswordTextField({
     super.key,
-    required this.controller,
+    this.controller,
+    this.value,
     this.label,
+    this.hintText,
     this.enabled = true,
-  });
+    this.prefixIcon,
+    this.errorText,
+    this.onChanged,
+  }) : assert(controller != null || value != null,
+            'Either controller or value must be provided');
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
+  final String? value;
   final String? label;
+  final String? hintText;
   final bool enabled;
+  final Widget? prefixIcon;
+  final String? errorText;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     final isPasswordVisible = useState(false);
+    final internalController = useTextEditingController(text: value ?? '');
+    useEffect(() {
+      if (value != null && internalController.text != value) {
+        internalController.text = value!;
+      }
+      return null;
+    }, [value]);
 
+    final ctrl = controller ?? internalController;
     final field = TextFormField(
-      controller: controller,
+      controller: ctrl,
       obscureText: !isPasswordVisible.value,
       enabled: enabled,
+      onChanged: onChanged,
       decoration: InputDecoration(
-        hintText: label ?? 'รหัสผ่าน',
+        hintText: hintText ?? label ?? 'รหัสผ่าน',
+        prefixIcon: prefixIcon,
+        errorText: errorText,
         suffixIcon: IconButton(
           icon: Icon(
             isPasswordVisible.value ? Icons.visibility : Icons.visibility_off,
@@ -34,12 +56,14 @@ class PasswordTextField extends HookWidget {
           },
         ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'กรุณากรอกรหัสผ่าน';
-        }
-        return null;
-      },
+      validator: errorText == null
+          ? (value) {
+              if (value == null || value.isEmpty) {
+                return 'กรุณากรอกรหัสผ่าน';
+              }
+              return null;
+            }
+          : null,
     );
 
     if (label != null) {

@@ -11,6 +11,7 @@ List<RouteBase> get $appRoutes => [
   $loginRoute,
   $appShellRoute,
   $mapClassDataRoute,
+  $incidentGuidelineRoute,
 ];
 
 RouteBase get $splashRoute =>
@@ -63,7 +64,9 @@ RouteBase get $appShellRoute => ShellRouteData.$route(
   factory: $AppShellRouteExtension._fromState,
   routes: [
     GoRouteData.$route(path: '/', factory: $HomeRoute._fromState),
+    GoRouteData.$route(path: '/report', factory: $ReportRoute._fromState),
     GoRouteData.$route(path: '/map', factory: $MapRoute._fromState),
+    GoRouteData.$route(path: '/profile', factory: $ProfileRoute._fromState),
   ],
 );
 
@@ -76,6 +79,26 @@ mixin $HomeRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ReportRoute on GoRouteData {
+  static ReportRoute _fromState(GoRouterState state) => const ReportRoute();
+
+  @override
+  String get location => GoRouteData.$location('/report');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -111,6 +134,26 @@ mixin $MapRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $ProfileRoute on GoRouteData {
+  static ProfileRoute _fromState(GoRouterState state) => const ProfileRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $mapClassDataRoute => GoRouteData.$route(
   path: '/map-class-data',
   factory: $MapClassDataRoute._fromState,
@@ -122,6 +165,36 @@ mixin $MapClassDataRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/map-class-data');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $incidentGuidelineRoute => GoRouteData.$route(
+  path: '/incident-guideline/:id',
+  factory: $IncidentGuidelineRoute._fromState,
+);
+
+mixin $IncidentGuidelineRoute on GoRouteData {
+  static IncidentGuidelineRoute _fromState(GoRouterState state) =>
+      IncidentGuidelineRoute(id: state.pathParameters['id']!);
+
+  IncidentGuidelineRoute get _self => this as IncidentGuidelineRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/incident-guideline/${Uri.encodeComponent(_self.id)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

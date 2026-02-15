@@ -1,15 +1,17 @@
-import 'package:bpmap_app/app_with_bloc.dart';
-import 'package:bpmap_app/shared/di/di.dart';
+import 'package:alarm/alarm.dart';
+import 'package:bpmap_app/app.dart';
 import 'package:bpmap_app/shared/constants/app_constants.dart';
-import 'package:bpmap_app/shared/services/notification_service.dart';
 import 'package:bpmap_app/shared/domain/models/app_config.dart';
+import 'package:bpmap_app/shared/providers/di_providers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> mainCommon(Environment env) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await Alarm.init();
 
   final envFile = _getEnvFile(env);
   await dotenv.load(fileName: envFile);
@@ -22,16 +24,12 @@ Future<void> mainCommon(Environment env) async {
     apiBaseUrl: dotenv.env[AppConstants.baseUrlKey]!,
   );
 
-  await initDependencies(appConfig);
-
-  try {
-    await getIt<NotificationService>().initialize();
-    debugPrint('Notification service initialized');
-  } catch (e) {
-    debugPrint('Failed to initialize notification service: $e');
-  }
-
-  runApp(const AppWithBloc());
+  runApp(
+    ProviderScope(
+      overrides: [appConfigProvider.overrideWithValue(appConfig)],
+      child: const MyApp(),
+    ),
+  );
 }
 
 String _getEnvFile(Environment env) {

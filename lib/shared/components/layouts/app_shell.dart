@@ -1,159 +1,107 @@
+import 'package:bpmap_app/presentation/router/router.dart';
 import 'package:bpmap_app/shared/extensions/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:bpmap_app/shared/components/layouts/app_drawer.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 
-class AppShell extends HookWidget {
-  final Widget child;
-  final List<Widget>? actions;
-  final Color backgroundColor;
-  final List<Widget> title;
-  final List<Widget> Function(BuildContext)? titleBuilder;
+class ShellMenuItem {
+  const ShellMenuItem({
+    required this.location,
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+    required this.go,
+  });
 
+  final String location;
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+  final void Function(BuildContext context) go;
+}
+
+class AppShell extends StatelessWidget {
   const AppShell({
     super.key,
     required this.child,
     this.backgroundColor = Colors.transparent,
-    this.actions,
     this.title = const [],
     this.titleBuilder,
   });
 
+  final Widget child;
+  final Color backgroundColor;
+  final List<Widget> title;
+  final List<Widget> Function(BuildContext)? titleBuilder;
+
+  static final List<ShellMenuItem> _menuItems = [
+    ShellMenuItem(
+      location: HomeRoute().location,
+      icon: Icons.home_outlined,
+      activeIcon: Icons.home,
+      label: 'หน้าหลัก',
+      go: (c) => const HomeRoute().go(c),
+    ),
+    ShellMenuItem(
+      location: ReportRoute().location,
+      icon: Icons.add_circle_outline,
+      activeIcon: Icons.add_circle,
+      label: 'แจ้งปัญหา',
+      go: (c) => const ReportRoute().go(c),
+    ),
+    ShellMenuItem(
+      location: MapRoute().location,
+      icon: Icons.map_outlined,
+      activeIcon: Icons.map,
+      label: 'แผนที่',
+      go: (c) => const MapRoute().go(c),
+    ),
+    ShellMenuItem(
+      location: ProfileRoute().location,
+      icon: Icons.person_outline,
+      activeIcon: Icons.person,
+      label: 'ฉัน',
+      go: (c) => const ProfileRoute().go(c),
+    ),
+  ];
+
+  static int _selectedIndexForLocation(String location) {
+    final index = _menuItems.indexWhere((m) => m.location == location);
+    return index >= 0 ? index : 0;
+  }
+
+  static void _onTabTap(BuildContext context, int index) {
+    _menuItems[index].go(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final animationController = useAnimationController(
-      duration: const Duration(milliseconds: 300),
+    final location = GoRouterState.of(context).matchedLocation;
+    final appColors = context.appColors;
+
+    final bottomNav = BottomNavigationBar(
+      currentIndex: _selectedIndexForLocation(location),
+      onTap: (index) => _onTabTap(context, index),
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: appColors.brandBlue,
+      unselectedItemColor: appColors.textSecondary,
+      items: _menuItems
+          .map(
+            (m) => BottomNavigationBarItem(
+              icon: Icon(m.icon),
+              activeIcon: Icon(m.activeIcon),
+              label: m.label,
+            ),
+          )
+          .toList(),
     );
-
-    final isDrawerOpen = useState(false);
-
-    final slideAnimation = Tween<double>(begin: 0, end: 280).animate(
-      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-    );
-
-    final scaleAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
-      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-    );
-
-    final radiusAnimation = Tween<double>(begin: 0, end: 0).animate(
-      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-    );
-
-    void toggleDrawer() {
-      if (isDrawerOpen.value) {
-        animationController.reverse();
-      } else {
-        animationController.forward();
-      }
-      isDrawerOpen.value = !isDrawerOpen.value;
-    }
 
     return Material(
       color: context.appColors.surface,
-      child: Stack(
-        children: [
-          AnimatedBuilder(
-            animation: slideAnimation,
-            builder: (context, child) {
-              return Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: slideAnimation.value,
-                child: OverflowBox(
-                  minWidth: 280,
-                  maxWidth: 280,
-                  alignment: Alignment.centerRight,
-                  child: AppDrawer(toggleDrawer: toggleDrawer),
-                ),
-              );
-            },
-          ),
-
-          AnimatedBuilder(
-            animation: animationController,
-            builder: (context, _) {
-              final appColors = context.appColors;
-              return Transform(
-                alignment: Alignment.centerLeft,
-                transform: Matrix4.identity()
-                  ..translateByDouble(slideAnimation.value, 0.0, 0.0, 1.0)
-                  ..scaleByDouble(
-                    scaleAnimation.value,
-                    scaleAnimation.value,
-                    scaleAnimation.value,
-                    1.0,
-                  ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(radiusAnimation.value),
-                  child: Stack(
-                    children: [
-                      Scaffold(
-                        extendBodyBehindAppBar: true,
-                        backgroundColor: backgroundColor,
-                        appBar: AppBar(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          leading: Builder(
-                            builder: (context) {
-                              return IconButton(
-                                icon: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: appColors.surface,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: appColors.textPrimary.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Icon(
-                                    isDrawerOpen.value
-                                        ? Icons.close
-                                        : Icons.list,
-                                    color: appColors.iconPrimary,
-                                  ),
-                                ),
-                                onPressed: toggleDrawer,
-                              );
-                            },
-                          ),
-                          title: titleBuilder != null
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: titleBuilder!(context),
-                                )
-                              : Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: title,
-                                ),
-                          centerTitle: true,
-                          actions: actions,
-                        ),
-                        body: child,
-                      ),
-
-                      if (isDrawerOpen.value)
-                        GestureDetector(
-                          onTap: toggleDrawer,
-                          child: Container(
-                            color: Colors.transparent,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: backgroundColor,
+        body: child,
+        bottomNavigationBar: bottomNav,
       ),
     );
   }
