@@ -8,17 +8,13 @@ part of 'di_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Root config: must be overridden in main via ProviderScope overrides.
 
 @ProviderFor(appConfig)
 const appConfigProvider = AppConfigProvider._();
 
-/// Root config: must be overridden in main via ProviderScope overrides.
-
 final class AppConfigProvider
     extends $FunctionalProvider<AppConfig, AppConfig, AppConfig>
     with $Provider<AppConfig> {
-  /// Root config: must be overridden in main via ProviderScope overrides.
   const AppConfigProvider._()
     : super(
         from: null,
@@ -444,53 +440,148 @@ final class AlarmServiceProvider
 
 String _$alarmServiceHash() => r'31bc356f6a1d47324e5c4a596e0fa36889af4e90';
 
-@ProviderFor(notificationService)
-const notificationServiceProvider = NotificationServiceProvider._();
+@ProviderFor(fcmGateway)
+const fcmGatewayProvider = FcmGatewayProvider._();
 
-final class NotificationServiceProvider
-    extends
-        $FunctionalProvider<
-          NotificationService,
-          NotificationService,
-          NotificationService
-        >
-    with $Provider<NotificationService> {
-  const NotificationServiceProvider._()
+final class FcmGatewayProvider
+    extends $FunctionalProvider<FcmGateway, FcmGateway, FcmGateway>
+    with $Provider<FcmGateway> {
+  const FcmGatewayProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'notificationServiceProvider',
+        name: r'fcmGatewayProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$notificationServiceHash();
+  String debugGetCreateSourceHash() => _$fcmGatewayHash();
 
   @$internal
   @override
-  $ProviderElement<NotificationService> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<FcmGateway> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  NotificationService create(Ref ref) {
-    return notificationService(ref);
+  FcmGateway create(Ref ref) {
+    return fcmGateway(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(NotificationService value) {
+  Override overrideWithValue(FcmGateway value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<NotificationService>(value),
+      providerOverride: $SyncValueProvider<FcmGateway>(value),
     );
   }
 }
 
-String _$notificationServiceHash() =>
-    r'59641a52bf257fec0b7d35ece0fa148e1fee6a02';
+String _$fcmGatewayHash() => r'76e94ff04079b8c3df88c23a8d4e63569aa0f53b';
+
+@ProviderFor(handleAlarmNotificationUseCase)
+const handleAlarmNotificationUseCaseProvider =
+    HandleAlarmNotificationUseCaseProvider._();
+
+final class HandleAlarmNotificationUseCaseProvider
+    extends
+        $FunctionalProvider<
+          HandleAlarmNotificationUseCase,
+          HandleAlarmNotificationUseCase,
+          HandleAlarmNotificationUseCase
+        >
+    with $Provider<HandleAlarmNotificationUseCase> {
+  const HandleAlarmNotificationUseCaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'handleAlarmNotificationUseCaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$handleAlarmNotificationUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<HandleAlarmNotificationUseCase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  HandleAlarmNotificationUseCase create(Ref ref) {
+    return handleAlarmNotificationUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HandleAlarmNotificationUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HandleAlarmNotificationUseCase>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$handleAlarmNotificationUseCaseHash() =>
+    r'1e293e48cf0d304576fbada89a662cfc89335379';
+
+@ProviderFor(handleDefaultNotificationUseCase)
+const handleDefaultNotificationUseCaseProvider =
+    HandleDefaultNotificationUseCaseProvider._();
+
+final class HandleDefaultNotificationUseCaseProvider
+    extends
+        $FunctionalProvider<
+          HandleDefaultNotificationUseCase,
+          HandleDefaultNotificationUseCase,
+          HandleDefaultNotificationUseCase
+        >
+    with $Provider<HandleDefaultNotificationUseCase> {
+  const HandleDefaultNotificationUseCaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'handleDefaultNotificationUseCaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$handleDefaultNotificationUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<HandleDefaultNotificationUseCase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  HandleDefaultNotificationUseCase create(Ref ref) {
+    return handleDefaultNotificationUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HandleDefaultNotificationUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HandleDefaultNotificationUseCase>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$handleDefaultNotificationUseCaseHash() =>
+    r'd203c2ebadf5d0be860323044aa6955da6f3f50c';
 
 @ProviderFor(locationService)
 const locationServiceProvider = LocationServiceProvider._();

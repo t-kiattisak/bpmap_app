@@ -57,10 +57,10 @@ class Auth extends _$Auth {
     state = const AsyncLoading();
     final authRepository = ref.read(authRepositoryProvider);
     final deviceInfoService = ref.read(deviceInfoServiceProvider);
-    final notificationService = ref.read(notificationServiceProvider);
+    final gateway = ref.read(fcmGatewayProvider);
 
     final deviceInfo = await deviceInfoService.getDeviceInfo();
-    final fcmToken = await notificationService.getToken() ?? '';
+    final fcmToken = await gateway.getToken() ?? '';
 
     final result = await authRepository.login(
       username: username,
@@ -105,9 +105,9 @@ class Auth extends _$Auth {
 
       final authRepository = ref.read(authRepositoryProvider);
       final deviceInfoService = ref.read(deviceInfoServiceProvider);
-      final notificationService = ref.read(notificationServiceProvider);
+      final gateway = ref.read(fcmGatewayProvider);
       final deviceInfo = await deviceInfoService.getDeviceInfo();
-      final fcmToken = await notificationService.getToken() ?? '';
+      final fcmToken = await gateway.getToken() ?? '';
 
       final result = await authRepository.googleLogin(
         idToken: idToken,
@@ -150,9 +150,9 @@ class Auth extends _$Auth {
 
       final authRepository = ref.read(authRepositoryProvider);
       final deviceInfoService = ref.read(deviceInfoServiceProvider);
-      final notificationService = ref.read(notificationServiceProvider);
+      final gateway = ref.read(fcmGatewayProvider);
       final deviceInfo = await deviceInfoService.getDeviceInfo();
-      final fcmToken = await notificationService.getToken() ?? '';
+      final fcmToken = await gateway.getToken() ?? '';
 
       final authResult = await authRepository.lineLogin(
         accessToken: idToken,

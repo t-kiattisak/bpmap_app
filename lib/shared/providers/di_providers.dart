@@ -13,8 +13,10 @@ import 'package:bpmap_app/shared/domain/models/app_config.dart';
 import 'package:bpmap_app/shared/services/alarm_service.dart';
 import 'package:bpmap_app/shared/services/device_info_service.dart';
 import 'package:bpmap_app/shared/services/local_notification_service.dart';
+import 'package:bpmap_app/features/notification/domain/use_cases/handle_alarm_notification_use_case.dart';
+import 'package:bpmap_app/features/notification/domain/use_cases/handle_default_notification_use_case.dart';
+import 'package:bpmap_app/shared/notification/fcm_gateway.dart';
 import 'package:bpmap_app/shared/services/location_service.dart';
-import 'package:bpmap_app/shared/services/notification_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -88,10 +90,19 @@ LocalNotificationService localNotificationService(Ref ref) {
 AlarmService alarmService(Ref ref) => AlarmService();
 
 @Riverpod(keepAlive: true)
-NotificationService notificationService(Ref ref) {
-  return NotificationService(
+FcmGateway fcmGateway(Ref ref) {
+  return FcmGateway(ref.watch(localNotificationServiceProvider));
+}
+
+@Riverpod(keepAlive: true)
+HandleAlarmNotificationUseCase handleAlarmNotificationUseCase(Ref ref) {
+  return HandleAlarmNotificationUseCase(ref.watch(alarmServiceProvider));
+}
+
+@Riverpod(keepAlive: true)
+HandleDefaultNotificationUseCase handleDefaultNotificationUseCase(Ref ref) {
+  return HandleDefaultNotificationUseCase(
     ref.watch(localNotificationServiceProvider),
-    ref.watch(alarmServiceProvider),
   );
 }
 

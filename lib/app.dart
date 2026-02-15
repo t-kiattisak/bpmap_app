@@ -85,11 +85,19 @@ class _AppScaffoldState extends ConsumerState<_AppScaffold>
 
   Future<void> _initializeNotifications() async {
     try {
-      final notificationService = ref.read(notificationServiceProvider);
-      await notificationService.initialize();
-      debugPrint('Notification service initialized');
+      final gateway = ref.read(fcmGatewayProvider);
+      final handleAlarm = ref.read(handleAlarmNotificationUseCaseProvider);
+      final handleDefault = ref.read(handleDefaultNotificationUseCaseProvider);
+
+      gateway.registerHandler('alarm', (msg, {openedFromNotification = false}) =>
+          handleAlarm.execute(msg, openedFromNotification: openedFromNotification));
+      gateway.registerHandler('default', (msg, {openedFromNotification = false}) =>
+          handleDefault.execute(msg, openedFromNotification: openedFromNotification));
+
+      await gateway.initialize();
+      debugPrint('FCM gateway initialized');
       final notificationRepository = ref.read(notificationRepositoryProvider);
-      final token = await notificationService.getToken();
+      final token = await gateway.getToken();
       if (token != null && token.isNotEmpty) {
         await notificationRepository.subscribe(tokens: [token]);
       }
