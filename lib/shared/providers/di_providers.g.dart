@@ -139,6 +139,95 @@ final class StorageServiceProvider
 
 String _$storageServiceHash() => r'1747c901b5fc6fe61a1b10972c73a2540869275c';
 
+@ProviderFor(hiveService)
+const hiveServiceProvider = HiveServiceProvider._();
+
+final class HiveServiceProvider
+    extends $FunctionalProvider<HiveService, HiveService, HiveService>
+    with $Provider<HiveService> {
+  const HiveServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hiveServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hiveServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<HiveService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  HiveService create(Ref ref) {
+    return hiveService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HiveService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HiveService>(value),
+    );
+  }
+}
+
+String _$hiveServiceHash() => r'7c72fd97faa6878f9ec376c863b52ef6c0bfcba1';
+
+@ProviderFor(backgroundLocationService)
+const backgroundLocationServiceProvider = BackgroundLocationServiceProvider._();
+
+final class BackgroundLocationServiceProvider
+    extends
+        $FunctionalProvider<
+          BackgroundLocationService,
+          BackgroundLocationService,
+          BackgroundLocationService
+        >
+    with $Provider<BackgroundLocationService> {
+  const BackgroundLocationServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'backgroundLocationServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$backgroundLocationServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<BackgroundLocationService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  BackgroundLocationService create(Ref ref) {
+    return backgroundLocationService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BackgroundLocationService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BackgroundLocationService>(value),
+    );
+  }
+}
+
+String _$backgroundLocationServiceHash() =>
+    r'6a903c9c3edbe6ab67f8b6db1956c82b9341051a';
+
 @ProviderFor(authInterceptor)
 const authInterceptorProvider = AuthInterceptorProvider._();
 
@@ -440,46 +529,53 @@ final class AlarmServiceProvider
 
 String _$alarmServiceHash() => r'31bc356f6a1d47324e5c4a596e0fa36889af4e90';
 
-@ProviderFor(fcmGateway)
-const fcmGatewayProvider = FcmGatewayProvider._();
+@ProviderFor(notificationService)
+const notificationServiceProvider = NotificationServiceProvider._();
 
-final class FcmGatewayProvider
-    extends $FunctionalProvider<FcmGateway, FcmGateway, FcmGateway>
-    with $Provider<FcmGateway> {
-  const FcmGatewayProvider._()
+final class NotificationServiceProvider
+    extends
+        $FunctionalProvider<
+          NotificationService,
+          NotificationService,
+          NotificationService
+        >
+    with $Provider<NotificationService> {
+  const NotificationServiceProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'fcmGatewayProvider',
+        name: r'notificationServiceProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$fcmGatewayHash();
+  String debugGetCreateSourceHash() => _$notificationServiceHash();
 
   @$internal
   @override
-  $ProviderElement<FcmGateway> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<NotificationService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
-  FcmGateway create(Ref ref) {
-    return fcmGateway(ref);
+  NotificationService create(Ref ref) {
+    return notificationService(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(FcmGateway value) {
+  Override overrideWithValue(NotificationService value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<FcmGateway>(value),
+      providerOverride: $SyncValueProvider<NotificationService>(value),
     );
   }
 }
 
-String _$fcmGatewayHash() => r'76e94ff04079b8c3df88c23a8d4e63569aa0f53b';
+String _$notificationServiceHash() =>
+    r'1c8705743761cd6ab15a6d63ffa230111e3221bf';
 
 @ProviderFor(handleAlarmNotificationUseCase)
 const handleAlarmNotificationUseCaseProvider =
@@ -530,7 +626,7 @@ final class HandleAlarmNotificationUseCaseProvider
 }
 
 String _$handleAlarmNotificationUseCaseHash() =>
-    r'1e293e48cf0d304576fbada89a662cfc89335379';
+    r'35894e3e82796427fb7e3d5863e807e73908c936';
 
 @ProviderFor(handleDefaultNotificationUseCase)
 const handleDefaultNotificationUseCaseProvider =

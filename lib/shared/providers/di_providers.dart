@@ -12,6 +12,8 @@ import 'package:bpmap_app/shared/data/remote/interceptors/auth_interceptor.dart'
 import 'package:bpmap_app/shared/domain/models/app_config.dart';
 import 'package:bpmap_app/shared/services/alarm_service.dart';
 import 'package:bpmap_app/shared/services/device_info_service.dart';
+import 'package:bpmap_app/shared/data/local/hive_service.dart';
+import 'package:bpmap_app/shared/services/background_location_service.dart';
 import 'package:bpmap_app/shared/services/local_notification_service.dart';
 import 'package:bpmap_app/features/notification/domain/use_cases/handle_alarm_notification_use_case.dart';
 import 'package:bpmap_app/features/notification/domain/use_cases/handle_default_notification_use_case.dart';
@@ -37,6 +39,14 @@ FlutterSecureStorage _flutterSecureStorage(Ref ref) =>
 @Riverpod(keepAlive: true)
 StorageService storageService(Ref ref) {
   return StorageService(ref.watch(_flutterSecureStorageProvider));
+}
+
+@Riverpod(keepAlive: true)
+HiveService hiveService(Ref ref) => HiveService();
+
+@Riverpod(keepAlive: true)
+BackgroundLocationService backgroundLocationService(Ref ref) {
+  return BackgroundLocationService(ref.watch(hiveServiceProvider));
 }
 
 @Riverpod(keepAlive: true)
@@ -90,13 +100,20 @@ LocalNotificationService localNotificationService(Ref ref) {
 AlarmService alarmService(Ref ref) => AlarmService();
 
 @Riverpod(keepAlive: true)
-FcmGateway fcmGateway(Ref ref) {
-  return FcmGateway(ref.watch(localNotificationServiceProvider));
+NotificationService notificationService(Ref ref) {
+  return NotificationService(
+    ref.watch(localNotificationServiceProvider),
+    ref.watch(handleAlarmNotificationUseCaseProvider),
+    ref.watch(handleDefaultNotificationUseCaseProvider),
+  );
 }
 
 @Riverpod(keepAlive: true)
 HandleAlarmNotificationUseCase handleAlarmNotificationUseCase(Ref ref) {
-  return HandleAlarmNotificationUseCase(ref.watch(alarmServiceProvider));
+  return HandleAlarmNotificationUseCase(
+    ref.watch(alarmServiceProvider),
+    ref.watch(backgroundLocationServiceProvider),
+  );
 }
 
 @Riverpod(keepAlive: true)
